@@ -37,4 +37,12 @@ describe(`Interface tests`, () => {
 
         expect(add5(2)).to.equal(7);
     });
+
+    it(`Can use shorthand to compose two functions`, () => {
+        const fn: any = Fn.make(new MathFn());
+
+        const mul6_add2 = fn.mul$6.add$2;
+
+        expect(mul6_add2(3)).to.equal(20);
+    });
 });
