@@ -1,4 +1,4 @@
 
-export class Fn {
-
-}
+export const make = <T> (obj?: T): T => {
+    return obj || ({} as T);
+};
