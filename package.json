@@ -1,0 +1,14 @@
+{
+  "name": "fn-l",
+  "version": "0.0.1",
+  "description": "Function composition library.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chad R Collins",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^3.4.3"
+  }
+}

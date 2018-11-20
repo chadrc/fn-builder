@@ -1,0 +1,47 @@
+{
+  "name": "fn-l",
+  "version": "0.0.1",
+  "description": "Function composition library.",
+  "author": "chadcollins <chadrcollins91@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/fn-l.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "keywords": [
+    "functional",
+    "functions",
+    "library",
+    "functional",
+    "promgramming",
+    "composition"
+  ],
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/jest": "^23.3.9",
+    "chai": "^4.2.0",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.4",
+    "typescript": "^3.1.6"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "testURL": "http://localhost",
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "src/__tests__/.*\\.test\\.(ts|tsx|js)$"
+  }
+}
