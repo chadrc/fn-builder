@@ -29,7 +29,7 @@ describe(`Interface tests`, () => {
         expect(add3_mul2(4)).to.equal(14);
     });
 
-    it(`Can use create function from existing function`, () => {
+    it(`Can create function from existing function`, () => {
         // Can only do shorthand notation with any type
         const fn: any = Fn.make(new MathFn());
 
@@ -38,7 +38,7 @@ describe(`Interface tests`, () => {
         expect(add5(2)).to.equal(7);
     });
 
-    it(`Can use chain two function creations`, () => {
+    it(`Can chain two function creations`, () => {
         const fn: any = Fn.make(new MathFn());
 
         const mul6_add2 = fn.mul(6).add(2);
