@@ -1,24 +1,5 @@
 import {Fn, FnContext, FnContextWrapper, GenericFunction} from "./types";
 
-const makeFnContext = <T>(
-    obj: T,
-    parent: FnContext<T> = null,
-    key: keyof T = null
-): FnContextWrapper<T> => {
-    const func = () => {
-    };
-    func.context = new FnContext<T>(obj, parent, key);
-    return func;
-};
-
-const makeFnProxyObject = <T extends object> (target: FnContextWrapper<T>): Fn<T> => {
-    return new Proxy(target, makeFnProxyHandler()) as unknown as Fn<T>;
-};
-
-const makeFnProxy = <T extends object>(obj: T, root: FnContext<T> = null, key: keyof T = null): Fn<T> => {
-    return makeFnProxyObject(makeFnContext(obj, root, key));
-};
-
 const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T>> => {
     return {
         get: function (thisArg: FnContextWrapper<T>, prop: keyof T) {
@@ -80,6 +61,25 @@ const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T
             return result;
         }
     }
+};
+
+const makeFnProxyObject = <T extends object> (target: FnContextWrapper<T>): Fn<T> => {
+    return new Proxy(target, makeFnProxyHandler()) as unknown as Fn<T>;
+};
+
+const makeFnContext = <T>(
+    obj: T,
+    parent: FnContext<T> = null,
+    key: keyof T = null
+): FnContextWrapper<T> => {
+    const func = () => {
+    };
+    func.context = new FnContext<T>(obj, parent, key);
+    return func;
+};
+
+const makeFnProxy = <T extends object>(obj: T, root: FnContext<T> = null, key: keyof T = null): Fn<T> => {
+    return makeFnProxyObject(makeFnContext(obj, root, key));
 };
 
 export default makeFnProxy;
