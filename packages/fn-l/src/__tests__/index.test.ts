@@ -44,4 +44,12 @@ describe(`Interface tests`, () => {
 
         expect(mul6_add2(3)).to.equal(20);
     });
+
+    it(`Can chain composed functions with inline composed functions`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const mul2_add10 = fn.mul2.add(10);
+
+        expect(mul2_add10(8)).to.equal(26);
+    });
 });
