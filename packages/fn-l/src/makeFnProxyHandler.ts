@@ -55,7 +55,7 @@ const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T
             }
 
             if (typeof result === "function") {
-                target.context.paramValue = argumentsList[0];
+                target.context.paramValue = argumentsList;
                 return makeFnProxyObject(target);
             }
             return result;

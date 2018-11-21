@@ -5,6 +5,10 @@ import 'jest';
 class MathFn {
     add = (num: number) => (value: number) => value + num;
     mul = (num: number) => (value: number) => value * num;
+    valuesInRange = (min: number, max: number) => (ary: number[]) => ary.filter((x) => min <= x && x <= max);
+
+    sum = (values: number[]) => values.reduce((prev, curr) => prev + curr, 0);
+    avg = (values: number[]) => this.sum(values) / values.length;
 
     add3 = this.add(3);
     mul2 = this.mul(2);
@@ -51,5 +55,15 @@ describe(`Interface tests`, () => {
         const mul2_add10 = fn.mul2.add(10);
 
         expect(mul2_add10(8)).to.equal(26);
+    });
+
+    it(`Can pass mulitple arguments to compose a function`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const avgOfValuesInRange = fn.valuesInRange(5, 12).avg;
+
+        // 8 + 10 + 12 = 30
+        // 30 / 3 = 10
+        expect(avgOfValuesInRange([2,8,10,12,15])).to.equal(10);
     });
 });

@@ -38,7 +38,7 @@ export class FnContext<T> {
         return this._func;
     }
 
-    set paramValue(v: any) {
-        this._func = this._func(v);
+    set paramValue(v: any[]) {
+        this._func = this._func(...v);
     }
 }
