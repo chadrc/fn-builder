@@ -30,8 +30,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can create function from existing function`, () => {
-        // Can only do shorthand notation with any type
-        const fn: any = Fn.make(new MathFn());
+        const fn = Fn.make(new MathFn());
 
         const add5 = fn.add(5);
 
@@ -39,7 +38,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can chain two function creations`, () => {
-        const fn: any = Fn.make(new MathFn());
+        const fn = Fn.make(new MathFn());
 
         const mul6_add2 = fn.mul(6).add(2);
 
