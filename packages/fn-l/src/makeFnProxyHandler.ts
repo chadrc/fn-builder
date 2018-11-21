@@ -22,6 +22,8 @@ const makeFnProxy = <T extends object>(obj: T, root: FnContext<T> = null, key: k
 const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T>> => {
     return {
         get: function (thisArg: FnContextWrapper<T>, prop: keyof T) {
+            // If requested prop is on the underlying object
+            // Proxy it for function composition
             if (!!(thisArg.context.contextObject[prop])) {
                 return makeFnProxy(
                     thisArg.context.contextObject,
