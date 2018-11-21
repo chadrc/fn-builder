@@ -94,5 +94,5 @@ describe(`Interface tests`, () => {
         };
 
         expect(func).to.throw();
-    })
+    });
 });
