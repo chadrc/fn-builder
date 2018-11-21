@@ -45,10 +45,15 @@ const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T
             // Reverse method chain for proper order
             contexts = contexts.reverse();
 
-            // start with given argument
-            let result = argumentsList[0];
+            // need to spread argumentList for first call
+            // get first context
+            const first = contexts.shift();
 
-            // Loop through methods passing the result of the previous to the next
+            // call first's function with spread argumentList to get starting result
+            let result = first.func(...argumentsList);
+
+            // Loop through remaining context calling their functions
+            // and passing its result to the next function
             for (const c of contexts) {
                 let method: GenericFunction<T> = c.func;
                 result = method(result);

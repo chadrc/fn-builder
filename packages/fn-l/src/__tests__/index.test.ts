@@ -3,6 +3,7 @@ import {expect} from 'chai';
 import 'jest';
 
 class MathFn {
+    addValues = (num1: number, num2: number) => num1 + num2;
     add = (num: number) => (value: number) => value + num;
     mul = (num: number) => (value: number) => value * num;
     valuesInRange = (min: number, max: number) => (ary: number[]) => ary.filter((x) => min <= x && x <= max);
@@ -65,5 +66,13 @@ describe(`Interface tests`, () => {
         // 8 + 10 + 12 = 30
         // 30 / 3 = 10
         expect(avgOfValuesInRange([2,8,10,12,15])).to.equal(10);
+    });
+
+    it(`Can pass multiple arguments to composed function`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const addValuesMul2 = fn.addValues.mul2;
+
+        expect(addValuesMul2(3, 4)).to.equal(14);
     });
 });
