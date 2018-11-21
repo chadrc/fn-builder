@@ -75,4 +75,24 @@ describe(`Interface tests`, () => {
 
         expect(addValuesMul2(3, 4)).to.equal(14);
     });
+
+    it(`Cannot set any value on Fn object`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const func = () => {
+            fn.add = (() => {}) as any;
+        };
+
+        expect(func).to.throw();
+    });
+
+    it(`Cannot delete any value on Fn object`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const func = () => {
+            delete fn.add;
+        };
+
+        expect(func).to.throw();
+    })
 });

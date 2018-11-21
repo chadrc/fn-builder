@@ -2,6 +2,8 @@ import {Fn, FnContext, FnContextWrapper, GenericFunction} from "./types";
 
 const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T>> => {
     return {
+        set: () => {throw new Error("Cannot set values on Fn object.")},
+        deleteProperty: () => {throw new Error("Cannot delete values on Fn object.")},
         get: function (thisArg: FnContextWrapper<T>, prop: keyof T) {
             // If requested prop is on the underlying object
             // Proxy it for function composition
@@ -70,7 +72,7 @@ const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T
     }
 };
 
-const makeFnProxyObject = <T extends object> (target: FnContextWrapper<T>): Fn<T> => {
+const makeFnProxyObject = <T extends object>(target: FnContextWrapper<T>): Fn<T> => {
     return new Proxy(target, makeFnProxyHandler()) as unknown as Fn<T>;
 };
 
