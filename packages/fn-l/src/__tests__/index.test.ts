@@ -57,7 +57,7 @@ describe(`Interface tests`, () => {
         expect(mul2_add10(8)).to.equal(26);
     });
 
-    it(`Can pass mulitple arguments to compose a function`, () => {
+    it(`Can pass multiple arguments to compose a function`, () => {
         const fn = Fn.make(new MathFn());
 
         const avgOfValuesInRange = fn.valuesInRange(5, 12).avg;

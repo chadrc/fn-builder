@@ -50,7 +50,7 @@ const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T
 
             // Loop through methods passing the result of the previous to the next
             for (const c of contexts) {
-                let method: GenericFunction = c.func;
+                let method: GenericFunction<T> = c.func;
                 result = method(result);
             }
 

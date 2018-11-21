@@ -1,7 +1,7 @@
-export type GenericFunction = Function
+export type GenericFunction<T> = (...arg: any) => any | Fn<T>
 
 export type Fn<T> = {
-    [P in keyof T]: Fn<T> & GenericFunction;
+    [P in keyof T]: Fn<T> & GenericFunction<T>;
 }
 
 export interface FnContextWrapper<T> {
@@ -13,7 +13,7 @@ export class FnContext<T> {
     private readonly _parent?: FnContext<T>;
     private readonly _key?: keyof T;
 
-    private _func: GenericFunction;
+    private _func: GenericFunction<T>;
 
     constructor(
         obj: T,
@@ -23,7 +23,7 @@ export class FnContext<T> {
         this._contextObject = obj;
         this._parent = parent;
         this._key = key;
-        this._func = obj[key] as unknown as GenericFunction;
+        this._func = obj[key] as unknown as GenericFunction<T>;
     }
 
     get contextObject() {
@@ -34,7 +34,7 @@ export class FnContext<T> {
         return this._parent;
     }
 
-    get func(): GenericFunction {
+    get func(): GenericFunction<T> {
         return this._func;
     }
 
