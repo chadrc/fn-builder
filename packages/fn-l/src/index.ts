@@ -74,6 +74,8 @@ class FnContext<T> {
     private readonly _key?: keyof T;
     private _paramValue?: ParamValue;
 
+    private _func: GenericFunction;
+
     constructor(
         obj: T,
         parent: FnContext<T> = null,
@@ -84,6 +86,7 @@ class FnContext<T> {
         this._parent = parent;
         this._key = key;
         this._paramValue = value;
+        this._func = this._contextObject[this._key] as unknown as GenericFunction;
     }
 
     get contextObject() {
@@ -94,24 +97,12 @@ class FnContext<T> {
         return this._parent;
     }
 
-    get key(): keyof T {
-        return this._key;
-    }
-
     get func(): GenericFunction {
-        let f = this._contextObject[this._key] as unknown as GenericFunction;
-        if (this._paramValue) {
-            f = f(this._paramValue) as unknown as GenericFunction;
-        }
-        return f;
-    }
-
-    get paramValue(): ParamValue {
-        return this._paramValue;
+        return this._func;
     }
 
     set paramValue(v: any) {
-        this._paramValue = v;
+        this._func = this._func(v);
     }
 }
 
@@ -137,6 +128,6 @@ const makeFnProxy = <T extends object> (obj: T, root: FnContext<T> = null, key: 
     ) as unknown as Fn<T>;
 };
 
-export const make = <T extends object> (obj?: T): Fn<T> => {
+export const make = <T extends object> (obj: T): Fn<T> => {
     return makeFnProxy(obj);
 };

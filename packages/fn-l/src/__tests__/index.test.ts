@@ -12,7 +12,7 @@ class MathFn {
 
 describe(`Interface tests`, () => {
     it(`Can create Fn instance`, () => {
-        Fn.make();
+        Fn.make({});
     });
 
     it(`Can create Fn with object`, () => {
