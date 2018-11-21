@@ -1,25 +1,12 @@
-type GenericFunction = (val: any) => any
+type GenericFunction = Function
 
 type Fn<T> = {
     [P in keyof T]: Fn<T> & GenericFunction;
 }
 
-type ParamValue = any;
-
-const optimisticCast = (value: string): ParamValue => {
-    const intVal = parseInt(value);
-    if (!isNaN(intVal)) {
-        return intVal;
-    }
-
-    if (value === "true") {
-        return true
-    } else if (value === "false") {
-        return false;
-    }
-
-    return value;
-};
+interface FnContextWrapper<T> {
+    context: FnContext<T>
+}
 
 const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T>> => {
     return {
@@ -43,10 +30,7 @@ const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T
                 // instead of a call to retrieve this chains result
                 if (typeof r === "function") {
                     target.context.paramValue = argumentsList[0];
-                    return new Proxy(
-                        target,
-                        makeFnProxyHandler()
-                    );
+                    return makeFnProxyObject(target);
                 }
             } catch (e) {
                 // Do nothing, since we don't know how the function works
@@ -78,10 +62,7 @@ const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T
 
             if (typeof result === "function") {
                 target.context.paramValue = argumentsList[0];
-                return new Proxy(
-                    target,
-                    makeFnProxyHandler()
-                );
+                return makeFnProxyObject(target);
             }
             return result;
         }
@@ -123,10 +104,6 @@ class FnContext<T> {
     }
 }
 
-interface FnContextWrapper<T> {
-    context: FnContext<T>
-}
-
 const makeFnContext = <T>(
     obj: T,
     parent: FnContext<T> = null,
@@ -138,11 +115,12 @@ const makeFnContext = <T>(
     return func;
 };
 
+const makeFnProxyObject = <T extends object> (target: FnContextWrapper<T>): Fn<T> => {
+    return new Proxy(target, makeFnProxyHandler()) as unknown as Fn<T>;
+};
+
 const makeFnProxy = <T extends object>(obj: T, root: FnContext<T> = null, key: keyof T = null): Fn<T> => {
-    return new Proxy(
-        makeFnContext(obj, root, key),
-        makeFnProxyHandler()
-    ) as unknown as Fn<T>;
+    return makeFnProxyObject(makeFnContext(obj, root, key));
 };
 
 export const make = <T extends object>(obj: T): Fn<T> => {
