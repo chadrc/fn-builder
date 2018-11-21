@@ -21,7 +21,7 @@ const optimisticCast = (value: string): ParamValue => {
     return value;
 };
 
-const makeFnProxyHandler = <T extends object> (): ProxyHandler<FnContextWrapper<T>> => {
+const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T>> => {
     return {
         get: function (thisArg: FnContextWrapper<T>, prop: keyof T) {
             if (!!(thisArg.context.contextObject[prop])) {
@@ -32,7 +32,7 @@ const makeFnProxyHandler = <T extends object> (): ProxyHandler<FnContextWrapper<
                 );
             }
         },
-        apply: function(target: FnContextWrapper<T>, thisArg: any, argumentsList: any) {
+        apply: function (target: FnContextWrapper<T>, thisArg: any, argumentsList: any) {
             let contexts = [];
 
             // This is the last context in the chain
@@ -72,21 +72,18 @@ class FnContext<T> {
     private readonly _contextObject: T;
     private readonly _parent?: FnContext<T>;
     private readonly _key?: keyof T;
-    private _paramValue?: ParamValue;
 
     private _func: GenericFunction;
 
     constructor(
         obj: T,
         parent: FnContext<T> = null,
-        key: keyof T = null,
-        value: ParamValue = null
+        key: keyof T = null
     ) {
         this._contextObject = obj;
         this._parent = parent;
         this._key = key;
-        this._paramValue = value;
-        this._func = this._contextObject[this._key] as unknown as GenericFunction;
+        this._func = obj[key] as unknown as GenericFunction;
     }
 
     get contextObject() {
@@ -110,24 +107,24 @@ interface FnContextWrapper<T> {
     context: FnContext<T>
 }
 
-const makeFnContext = <T> (
+const makeFnContext = <T>(
     obj: T,
     parent: FnContext<T> = null,
-    key: keyof T = null,
-    value: ParamValue = null
-) : FnContextWrapper<T> => {
-    const func = () => {};
-    func.context = new FnContext<T>(obj, parent, key, value);
+    key: keyof T = null
+): FnContextWrapper<T> => {
+    const func = () => {
+    };
+    func.context = new FnContext<T>(obj, parent, key);
     return func;
 };
 
-const makeFnProxy = <T extends object> (obj: T, root: FnContext<T> = null, key: keyof T = null, value: ParamValue = null): Fn<T> => {
+const makeFnProxy = <T extends object>(obj: T, root: FnContext<T> = null, key: keyof T = null): Fn<T> => {
     return new Proxy(
-        makeFnContext(obj, root, key, value),
+        makeFnContext(obj, root, key),
         makeFnProxyHandler()
     ) as unknown as Fn<T>;
 };
 
-export const make = <T extends object> (obj: T): Fn<T> => {
+export const make = <T extends object>(obj: T): Fn<T> => {
     return makeFnProxy(obj);
 };
