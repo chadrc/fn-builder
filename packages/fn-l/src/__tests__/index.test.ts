@@ -33,7 +33,7 @@ describe(`Interface tests`, () => {
         // Can only do shorthand notation with any type
         const fn: any = Fn.make(new MathFn());
 
-        const add5 = fn.add$5;
+        const add5 = fn.add(5);
 
         expect(add5(2)).to.equal(7);
     });
@@ -41,7 +41,7 @@ describe(`Interface tests`, () => {
     it(`Can use shorthand to compose two functions`, () => {
         const fn: any = Fn.make(new MathFn());
 
-        const mul6_add2 = fn.mul$6.add$2;
+        const mul6_add2 = fn.mul(6).add(2);
 
         expect(mul6_add2(3)).to.equal(20);
     });

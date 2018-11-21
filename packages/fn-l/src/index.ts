@@ -4,7 +4,7 @@ type Fn<T> = {
     [P in keyof T]: Fn<T> & GenericFunction;
 }
 
-type ParamValue = string | number | boolean
+type ParamValue = any;
 
 const optimisticCast = (value: string): ParamValue => {
     const intVal = parseInt(value);
@@ -30,22 +30,6 @@ const makeFnProxyHandler = <T extends object> (): ProxyHandler<FnContextWrapper<
                     thisArg.context,
                     prop
                 );
-            } else {
-                const strProp = prop.toString();
-                const indexOf$ = strProp.indexOf("$");
-                if (indexOf$ !== -1) {
-                    const methodName = strProp.slice(0, indexOf$);
-                    const value = strProp.slice(indexOf$ + 1);
-
-                    if (!!(thisArg.context.contextObject[methodName as keyof T])) {
-                        return makeFnProxy(
-                            thisArg.context.contextObject,
-                            thisArg.context,
-                            methodName as keyof T,
-                            optimisticCast(value)
-                        );
-                    }
-                }
             }
         },
         apply: function(target: FnContextWrapper<T>, thisArg: any, argumentsList: any) {
@@ -72,6 +56,13 @@ const makeFnProxyHandler = <T extends object> (): ProxyHandler<FnContextWrapper<
                 result = method(result);
             }
 
+            if (typeof result === "function") {
+                target.context.paramValue = argumentsList[0];
+                return new Proxy(
+                    target,
+                    makeFnProxyHandler()
+                );
+            }
             return result;
         }
     }
@@ -81,7 +72,7 @@ class FnContext<T> {
     private readonly _contextObject: T;
     private readonly _parent?: FnContext<T>;
     private readonly _key?: keyof T;
-    private readonly _paramValue?: ParamValue;
+    private _paramValue?: ParamValue;
 
     constructor(
         obj: T,
@@ -113,6 +104,14 @@ class FnContext<T> {
             f = f(this._paramValue) as unknown as GenericFunction;
         }
         return f;
+    }
+
+    get paramValue(): ParamValue {
+        return this._paramValue;
+    }
+
+    set paramValue(v: any) {
+        this._paramValue = v;
     }
 }
 
