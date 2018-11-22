@@ -24,6 +24,7 @@ export class FnContext<T> {
     private readonly _keyedRoot: FnContext<T>;
     private readonly _func: GenericFunction;
     private readonly _rawFunc: GenericFunction;
+    private readonly _name: string;
 
     constructor(
         obj: T,
@@ -36,15 +37,28 @@ export class FnContext<T> {
         this._key = key;
         this._args = args;
 
+        // Need some info for naming
+        // and need name for caching
+
         // if parent is null, then this is the root context
-        // root context maintains the function cache
         if (!this._parent) {
-            this._contextCache = {};
             this._root = this;
+            this._contextCache = {};
         } else {
-            // Maintain reference to root
             this._root = this._parent._root;
 
+            if (this._key == null) {
+                this._keyedRoot = this._parent._keyedRoot;
+            } else {
+                this._keyedRoot = this;
+            }
+
+            // root doesn't need a name
+            this._name = this.compileName();
+        }
+
+        // root context maintains the function cache
+        if (this._parent) {
             if (this._key === null) {
                 this._keyedRoot = this._parent._keyedRoot;
                 // This context is being created by a function call
@@ -84,7 +98,7 @@ export class FnContext<T> {
         }
     }
 
-    get name(): string {
+    compileName(): string {
         let name;
 
         let key = this._key;
@@ -124,6 +138,10 @@ export class FnContext<T> {
         }
 
         return name;
+    }
+
+    get name() {
+        return this._name;
     }
 
     get contextObject() {
