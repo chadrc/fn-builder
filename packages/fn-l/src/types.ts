@@ -29,7 +29,7 @@ export class FnContext<T> {
         obj: T,
         parent: FnContext<T> = null,
         key: keyof T = null,
-        args: any[] = null,
+        args: any[] = [],
     ) {
         this._contextObject = obj;
         this._parent = parent;
@@ -67,7 +67,7 @@ export class FnContext<T> {
                 this._rawFunc = this._parent._rawFunc;
 
                 // create new function by invoking parent function with given args
-                this._rawFunc = this._rawFunc(...(this._args || []));
+                this._rawFunc = this._rawFunc(...this._args);
 
                 // Compose this function with closest keyed ancestor's parent
                 let closestKeyedAncestorParent = this._closestKeyedAncestor._parent;
