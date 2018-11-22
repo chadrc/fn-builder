@@ -34,6 +34,8 @@ export class FnContext<T> {
     ) {
         this._contextObject = obj;
         this._parent = parent;
+        this._key = key;
+        this._args = args;
 
         // if parent is null, then this is the root context
         // root context maintains the function cache
@@ -44,7 +46,7 @@ export class FnContext<T> {
             this._root = parent.root;
             // Only child contexts have functions
 
-            // this._closestKeyedAncestor = this.closestKeyedAncestor;
+            this._closestKeyedAncestor = this.closestKeyedAncestor;
 
             if (key === null) {
                 // This context is being created by a function call
@@ -64,9 +66,9 @@ export class FnContext<T> {
                 this._rawFunc = this._rawFunc(...args);
 
                 // Need to now compose this function with closest keyed ancestor's parent
-                let closestKeyedAncestor = this.closestKeyedAncestor._parent;
-                if (closestKeyedAncestor !== this._root) {
-                    this._func = (...input) => this._rawFunc(closestKeyedAncestor._func(...input));
+                let closestKeyedAncestorParent = this._closestKeyedAncestor._parent;
+                if (closestKeyedAncestorParent !== this._root) {
+                    this._func = (...input) => this._rawFunc(closestKeyedAncestorParent._func(...input));
                 } else {
                     this._func = this._rawFunc;
                 }
