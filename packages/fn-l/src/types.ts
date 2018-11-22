@@ -55,50 +55,27 @@ export class FnContext<T> {
 
             // root doesn't need a name
             this._name = this.compileName();
-        }
 
-        // root context maintains the function cache
-        if (this._parent) {
-            if (this._key === null) {
-                this._keyedRoot = this._parent._keyedRoot;
-                // This context is being created by a function call
-                // not by property access
+            let compiledFunctions = this.compileFunctions();
 
-                // get raw function parent function
-                this._rawFunc = this._parent._rawFunc;
-
-                // create new function by invoking parent function with given args
-                this._rawFunc = this._rawFunc(...this._args);
-
-                // Compose this function with closest keyed ancestor's parent
-                let keyedRootParent = this._keyedRoot._parent;
-                if (keyedRootParent !== this._root) {
-                    this._func = (...input) => this._rawFunc(keyedRootParent._func(...input));
-                } else {
-                    // is starting context
-                    // use raw function
-                    this._func = this._rawFunc;
-                }
-            } else {
-                this._keyedRoot = this;
-                // This context is being created by direct access to context object with key
-
-                // get function from context object with key
-                this._rawFunc = this._contextObject[this._key] as unknown as GenericFunction;
-
-                if (this._parent === this._root) {
-                    // is starting context
-                    // use raw function
-                    this._func = this._rawFunc;
-                } else {
-                    // compose it directly with its parent function
-                    this._func = (...input) => this._rawFunc(this._parent._func(...input));
-                }
-            }
+            this._func = compiledFunctions.func;
+            this._rawFunc = compiledFunctions.rawFunc;
         }
     }
 
-    compileName(): string {
+    get name() {
+        return this._name;
+    }
+
+    get contextObject() {
+        return this._contextObject;
+    }
+
+    get func(): GenericFunction {
+        return this._func;
+    }
+
+    private compileName(): string {
         let name;
 
         let key = this._key;
@@ -140,15 +117,45 @@ export class FnContext<T> {
         return name;
     }
 
-    get name() {
-        return this._name;
-    }
+    private compileFunctions() {
+        let func: GenericFunction = null;
+        let rawFunc: GenericFunction = null;
 
-    get contextObject() {
-        return this._contextObject;
-    }
+        if (this._key === null) {
+            // This context is being created by a function call
+            // not by property access
 
-    get func(): GenericFunction {
-        return this._func;
+            // get raw function parent function
+            rawFunc = this._parent._rawFunc;
+
+            // create new function by invoking parent function with given args
+            rawFunc = rawFunc(...this._args);
+
+            // Compose this function with closest keyed ancestor's parent
+            let keyedRootParent = this._keyedRoot._parent;
+            if (keyedRootParent !== this._root) {
+                func = (...input) => rawFunc(keyedRootParent._func(...input));
+            } else {
+                // is starting context
+                // use raw function
+                func = rawFunc;
+            }
+        } else {
+            // This context is being created by direct access to context object with key
+
+            // get function from context object with key
+            rawFunc = this._contextObject[this._key] as unknown as GenericFunction;
+
+            if (this._parent === this._root) {
+                // is starting context
+                // use raw function
+                func = rawFunc;
+            } else {
+                // compose it directly with its parent function
+                func = (...input) => rawFunc(this._parent._func(...input));
+            }
+        }
+
+        return {func, rawFunc};
     }
 }
