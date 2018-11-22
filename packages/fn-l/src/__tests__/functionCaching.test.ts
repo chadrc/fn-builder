@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import 'jest';
 import {MathFn} from "./MathFn";
 
-describe(`Function Cacheing`, () => {
+describe(`Function Caching`, () => {
     it(`Two function chains with same methods are equal`, () => {
         const fn = Fn.make(new MathFn());
 
