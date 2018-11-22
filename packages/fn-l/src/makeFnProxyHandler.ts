@@ -1,10 +1,15 @@
 import {Fn, FnContext, FnContextWrapper} from "./types";
 
+export const InternalsKey = "__FnInternals__";
+
 const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T>> => {
     return {
         set: () => {throw new Error("Cannot set values on Fn object.")},
         deleteProperty: () => {throw new Error("Cannot delete values on Fn object.")},
         get: function (thisArg: FnContextWrapper<T>, prop: keyof T) {
+            if (prop === InternalsKey) {
+                return thisArg.context;
+            }
             // If requested prop is on the underlying object
             // Proxy it for function composition
             if (!!(thisArg.context.contextObject[prop])) {
@@ -43,8 +48,7 @@ const makeFnContext = <T>(
     key: keyof T = null,
     args: any[] = null,
 ): FnContextWrapper<T> => {
-    const func = () => {
-    };
+    const func = () => {};
     func.context = new FnContext<T>(obj, parent, key, args);
     return func;
 };
@@ -53,7 +57,7 @@ const makeFnProxy = <T extends object>(
     obj: T,
     root: FnContext<T> = null,
     key: keyof T = null,
-    args: any[],
+    args: any[] = [],
 ): Fn<T> => {
     return makeFnProxyObject(makeFnContext(obj, root, key, args));
 };

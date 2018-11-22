@@ -96,6 +96,14 @@ export class FnContext<T> {
         }
     }
 
+    get name(): string {
+        let name;
+
+        name = `${this._key.toString()}()`;
+
+        return name;
+    }
+
     get contextObject() {
         return this._contextObject;
     }
