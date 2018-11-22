@@ -18,7 +18,7 @@ export class FnContext<T> {
     private readonly _contextObject: T;
     private readonly _parent?: FnContext<T>;
     private readonly _key?: keyof T;
-    private readonly _contextCache?: {[key: string]: GenericFunction[]};
+    private readonly _contextCache?: { [key: string]: GenericFunction[] };
     private readonly _root: FnContext<T>;
     private readonly _args: any[];
     private readonly _closestKeyedAncestor: FnContext<T>;
@@ -100,15 +100,27 @@ export class FnContext<T> {
         let name;
 
         let key = this._key;
-        let args = this._args;
+
+        let argSets = [this._args];
 
         if (key === null) {
             key = this._closestKeyedAncestor._key;
+
+            // get remaining args
+            let next = this._parent;
+            while (next !== this._closestKeyedAncestor && next !== this._root) {
+                argSets.push(next._args);
+                next = next._parent;
+            }
         }
 
-        let argStr = `(${args.map((arg => typeof arg)).join(",")})`;
+        let argStr = argSets
+            .reverse() // because we started at end
+            .map(set =>
+                `(${set.map(arg => typeof arg).join(",")})`
+            );
 
-        name = `${key.toString()}${argStr}`;
+        name = `${key.toString()}${argStr.join("")}`;
 
         return name;
     }

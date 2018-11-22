@@ -20,6 +20,14 @@ describe(`Function Caching`, () => {
         expect(addName).to.equal("add(number)");
     });
 
+    it(`Name of composed function includes variable types of all calls`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const precisionDivName = Fn.nameOf(fn.precisionDiv(2)(10));
+        
+        expect(precisionDivName).to.equal("precisionDiv(number)(number)");
+    });
+
     it(`Two function chains with same methods with no arguments are equal`, () => {
         const fn = Fn.make(new MathFn());
 
