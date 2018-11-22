@@ -1,7 +1,12 @@
-export type GenericFunction<T> = (...arg: any) => any | Fn<T>
+export type GenericFunction<T> = (...arg: any) => any
+
+export type FnPropertyFunction<T, F> = F extends (...arg: infer U) => any ?
+    ReturnType<F> extends (...arg: any[]) => any ?
+        (...args: U) => ReturnType<F> & Fn<T> & GenericFunction<T> : (...args: any[]) => GenericFunction<T>
+    : F;
 
 export type Fn<T> = {
-    [P in keyof T]: Fn<T> & GenericFunction<T>;
+    [P in keyof T]: Fn<T> & FnPropertyFunction<T, T[P]>;
 }
 
 export interface FnContextWrapper<T> {

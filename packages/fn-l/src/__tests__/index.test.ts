@@ -71,9 +71,9 @@ describe(`Interface tests`, () => {
     it(`Can pass multiple arguments to composed function`, () => {
         const fn = Fn.make(new MathFn());
 
-        const addValuesMul2 = fn.addValues.mul2;
+        const addValuesMul2 = fn.addValues.mul2.add(4);
 
-        expect(addValuesMul2(3, 4)).to.equal(14);
+        expect(addValuesMul2(3, 4)).to.equal(18);
     });
 
     it(`Cannot set any value on Fn object`, () => {
