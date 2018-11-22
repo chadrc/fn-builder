@@ -99,7 +99,16 @@ export class FnContext<T> {
     get name(): string {
         let name;
 
-        name = `${this._key.toString()}()`;
+        let key = this._key;
+        let args = this._args;
+
+        if (key === null) {
+            key = this._closestKeyedAncestor._key;
+        }
+
+        let argStr = `(${args.map((arg => typeof arg)).join(",")})`;
+
+        name = `${key.toString()}${argStr}`;
 
         return name;
     }
