@@ -72,7 +72,7 @@ describe(`Interface tests`, () => {
         expect(addValuesMul2(3, 4)).to.equal(18);
     });
 
-    it(`Can curry one function multiple times`, () => {
+    it(`Can chain calls to one function`, () => {
         const fn = Fn.make(new MathFn());
 
         const div10_2decimals = fn.precisionDiv(2)(8).mul(3);
