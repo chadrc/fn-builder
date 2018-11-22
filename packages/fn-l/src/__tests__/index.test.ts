@@ -46,7 +46,6 @@ describe(`Interface tests`, () => {
         expect(add3_mul2(4)).to.equal(14);
     });
 
-
     it(`Can chain composed functions with inline composed functions`, () => {
         const fn = Fn.make(new MathFn());
 
