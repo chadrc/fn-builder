@@ -7,6 +7,7 @@ export class MathFn {
     precisionDiv = (decimal: number) => (denominator: number) => (numerator: number) => (numerator / denominator).toFixed(decimal);
     sum = (values: number[]) => values.reduce((prev, curr) => prev + curr, 0);
     avg = (values: number[]) => this.sum(values) / values.length;
+    inc = (value: number) => ++value;
 
     add3 = this.add(3);
     mul2 = this.mul(2);

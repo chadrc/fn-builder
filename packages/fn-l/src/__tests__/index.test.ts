@@ -14,14 +14,6 @@ describe(`Interface tests`, () => {
         });
     });
 
-    it(`Can chain two functions`, () => {
-        const fn = Fn.make(new MathFn());
-
-        const add3_mul2 = fn.add3.mul2;
-
-        expect(add3_mul2(4)).to.equal(14);
-    });
-
     it(`Can create function from existing function`, () => {
         const fn = Fn.make(new MathFn());
 
@@ -37,6 +29,15 @@ describe(`Interface tests`, () => {
 
         expect(mul6_add2(3)).to.equal(20);
     });
+
+    it(`Can chain two composed functions`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const add3_mul2 = fn.add3.mul2;
+
+        expect(add3_mul2(4)).to.equal(14);
+    });
+
 
     it(`Can chain composed functions with inline composed functions`, () => {
         const fn = Fn.make(new MathFn());
