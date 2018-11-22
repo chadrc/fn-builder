@@ -104,10 +104,6 @@ export class FnContext<T> {
         return this._contextObject;
     }
 
-    get parent(): FnContext<T> {
-        return this._parent;
-    }
-
     get func(): GenericFunction {
         return this._func;
     }
