@@ -24,8 +24,16 @@ describe(`Function Caching`, () => {
         const fn = Fn.make(new MathFn());
 
         const precisionDivName = Fn.nameOf(fn.precisionDiv(2)(10));
-        
+
         expect(precisionDivName).to.equal("precisionDiv(number)(number)");
+    });
+
+    it(`Name of function with multiple parameters displays all of them`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const valuesInRangeName = Fn.nameOf(fn.valuesInRange(3, 8));
+
+        expect(valuesInRangeName).to.equal("valuesInRange(number,number)");
     });
 
     it(`Two function chains with same methods with no arguments are equal`, () => {
