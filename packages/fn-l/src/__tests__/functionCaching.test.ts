@@ -44,6 +44,22 @@ describe(`Function Caching`, () => {
         expect(sumIncName).to.equal("inc(sum(__input__))");
     });
 
+    it(`Name of function chain with multiple functions arguments`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const mulIncName = Fn.nameOf(fn.mul(4).inc);
+
+        expect(mulIncName).to.equal("inc(mul(number)(__input__))");
+    });
+
+    it(`Name of function chain with multiple functions with arguments`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const mulIncAddName = Fn.nameOf(fn.mul(4).inc.add(3));
+
+        expect(mulIncAddName).to.equal("add(number)(inc(mul(number)(__input__)))");
+    });
+
     it(`Two function chains with same methods with no arguments are equal`, () => {
         const fn = Fn.make(new MathFn());
 
