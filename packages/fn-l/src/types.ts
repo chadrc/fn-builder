@@ -57,9 +57,9 @@ export class FnContext<T> {
                 this._rawFunc = this._rawFunc(...this._args);
 
                 // Compose this function with closest keyed ancestor's parent
-                let closestKeyedAncestorParent = this._keyedRoot._parent;
-                if (closestKeyedAncestorParent !== this._root) {
-                    this._func = (...input) => this._rawFunc(closestKeyedAncestorParent._func(...input));
+                let keyedRootParent = this._keyedRoot._parent;
+                if (keyedRootParent !== this._root) {
+                    this._func = (...input) => this._rawFunc(keyedRootParent._func(...input));
                 } else {
                     // is starting context
                     // use raw function
