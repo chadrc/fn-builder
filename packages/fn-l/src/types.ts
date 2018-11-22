@@ -44,14 +44,14 @@ export class FnContext<T> {
             this._root = parent.root;
             // Only child contexts have functions
 
-            this._closestKeyedAncestor = this.closestKeyedAncestor;
+            // this._closestKeyedAncestor = this.closestKeyedAncestor;
 
             if (key === null) {
                 // This context is being created by a function call
                 // not by property access
 
                 // get function parent function
-                this._rawFunc = this._parent._func;
+                this._rawFunc = this._parent._rawFunc;
             } else {
                 // get function from context object with key
                 this._key = key;
@@ -62,16 +62,21 @@ export class FnContext<T> {
             if (args && args.length > 0) {
                 this._args = args;
                 this._rawFunc = this._rawFunc(...args);
-            }
 
-            // unkeyed children already get comped with their keyed ancestor
-            // but now we need to comp with next keyed ancestor
-            // or the result of the next keyed ancestor and its unkeyed children
-            // this will be the parent of our closest keyed ancestor
+                // Need to now compose this function with closest keyed ancestor's parent
+                let closestKeyedAncestor = this.closestKeyedAncestor._parent;
+                if (closestKeyedAncestor !== this._root) {
+                    this._func = (...input) => this._rawFunc(closestKeyedAncestor._func(...input));
+                } else {
+                    this._func = this._rawFunc;
+                }
+            } else if (this._parent !== this._root) {
+                // unkeyed children already get comped with their keyed ancestor
+                // but now we need to comp with next keyed ancestor
+                // or the result of the next keyed ancestor and its unkeyed children
+                // this will be the parent of our closest keyed ancestor
 
-            if (this._closestKeyedAncestor !== null // was set to null if parent is root
-                && this._closestKeyedAncestor._parent !== this._root) {
-                this._func = (...input) => this._rawFunc(this._closestKeyedAncestor._parent._func(...input));
+                this._func = (...input) => this._rawFunc(this._parent._func(...input));
             } else {
                 // is starting function
                 // use raw func
