@@ -2,7 +2,8 @@ export type GenericFunction<T> = (...arg: any) => any
 
 export type FnPropertyFunction<T, F> = F extends (...arg: infer U) => any ?
     ReturnType<F> extends (...arg: any[]) => any ?
-        (...args: U) => ReturnType<F> & Fn<T> & GenericFunction<T> : (...args: any[]) => GenericFunction<T>
+        (...args: U) => Fn<T> & FnPropertyFunction<T, ReturnType<F>>// & GenericFunction<T>
+        : (...args: any[]) => GenericFunction<T>
     : F;
 
 export type Fn<T> = {

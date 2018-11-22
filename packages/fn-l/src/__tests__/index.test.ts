@@ -8,6 +8,7 @@ class MathFn {
     mul = (num: number) => (value: number) => value * num;
     valuesInRange = (min: number, max: number) => (ary: number[]) => ary.filter((x) => min <= x && x <= max);
 
+    precisionDiv = (decimal: number) => (denominator: number) => (numerator: number) => (numerator / denominator).toFixed(decimal);
     sum = (values: number[]) => values.reduce((prev, curr) => prev + curr, 0);
     avg = (values: number[]) => this.sum(values) / values.length;
 
@@ -74,6 +75,14 @@ describe(`Interface tests`, () => {
         const addValuesMul2 = fn.addValues.mul2.add(4);
 
         expect(addValuesMul2(3, 4)).to.equal(18);
+    });
+
+    it(`Can curry one function multiple times`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const div10_2decimals = fn.precisionDiv(2)(8).mul(3);
+
+        expect(div10_2decimals(1)).to.equal(.39);
     });
 
     it(`Cannot set any value on Fn object`, () => {
