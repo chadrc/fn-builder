@@ -21,7 +21,7 @@ export class FnContext<T> {
     private readonly _contextCache?: { [key: string]: GenericFunction[] };
     private readonly _root: FnContext<T>;
     private readonly _args: any[];
-    private readonly _closestKeyedAncestor: FnContext<T>;
+    private readonly _keyedRoot: FnContext<T>;
     private readonly _func: GenericFunction;
     private readonly _rawFunc: GenericFunction;
 
@@ -45,21 +45,8 @@ export class FnContext<T> {
             // Maintain reference to root
             this._root = this._parent._root;
 
-            // Only child contexts have functions
-            this._closestKeyedAncestor = null;
-
-            if (this._parent !== this._root) {
-                // get closest ancestor that has a key
-                if (this._parent._key === null) {
-                    // if parent doesn't have a key then we use the same ancestor that our parent has
-                    this._closestKeyedAncestor = this._parent._closestKeyedAncestor;
-                } else {
-                    // use parent
-                    this._closestKeyedAncestor = this._parent;
-                }
-            }
-
             if (this._key === null) {
+                this._keyedRoot = this._parent._keyedRoot;
                 // This context is being created by a function call
                 // not by property access
 
@@ -70,7 +57,7 @@ export class FnContext<T> {
                 this._rawFunc = this._rawFunc(...this._args);
 
                 // Compose this function with closest keyed ancestor's parent
-                let closestKeyedAncestorParent = this._closestKeyedAncestor._parent;
+                let closestKeyedAncestorParent = this._keyedRoot._parent;
                 if (closestKeyedAncestorParent !== this._root) {
                     this._func = (...input) => this._rawFunc(closestKeyedAncestorParent._func(...input));
                 } else {
@@ -79,6 +66,7 @@ export class FnContext<T> {
                     this._func = this._rawFunc;
                 }
             } else {
+                this._keyedRoot = this;
                 // This context is being created by direct access to context object with key
 
                 // get function from context object with key
@@ -101,15 +89,17 @@ export class FnContext<T> {
 
         let key = this._key;
 
-        let argSets = [this._args];
+        let argSets = [];
 
         if (key === null) {
-            key = this._closestKeyedAncestor._key;
+            key = this._keyedRoot._key;
 
             // get remaining args
-            let next = this._parent;
-            while (next !== this._closestKeyedAncestor && next !== this._root) {
-                argSets.push(next._args);
+            let next = this as FnContext<T>;
+            while (next !== this._keyedRoot && next !== this._root) {
+                if (next._args) {
+                    argSets.push(next._args);
+                }
                 next = next._parent;
             }
         }
@@ -121,6 +111,17 @@ export class FnContext<T> {
             );
 
         name = `${key.toString()}${argStr.join("")}`;
+
+        // start past already used contexts
+        const wrappedContext = this._keyedRoot._parent;
+
+        if (wrappedContext !== this._root) {
+            name = `${name}(${wrappedContext.name})`;
+        }
+
+        if (this._keyedRoot._parent === this._root) {
+            name += "(__input__)";
+        }
 
         return name;
     }
