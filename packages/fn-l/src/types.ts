@@ -47,7 +47,18 @@ export class FnContext<T> {
             this._root = this._parent.root;
 
             // Only child contexts have functions
-            this._closestKeyedAncestor = this.closestKeyedAncestor;
+            this._closestKeyedAncestor = null;
+
+            if (this._parent !== this._root) {
+                // get closest ancestor that has a key
+                if (this._parent._key === null) {
+                    // if parent doesn't have a key then we use the same ancestor that our parent has
+                    this._closestKeyedAncestor = this._parent._closestKeyedAncestor;
+                } else {
+                    // use parent
+                    this._closestKeyedAncestor = this._parent;
+                }
+            }
 
             if (this._key === null) {
                 // This context is being created by a function call
@@ -100,24 +111,5 @@ export class FnContext<T> {
 
     get func(): GenericFunction {
         return this._func;
-    }
-
-    private get closestKeyedAncestor() {
-        // if this is root
-        // or parent is root
-        // there is no keyed ancestor
-        if (this.parent === null
-            || this._parent === this._root) {
-            return null;
-        }
-
-        // get closest ancestor that has a key
-        if (this._parent._key === null) {
-            // if parent doesn't have a key then we use the same ancestor that our parent has
-            return this._parent._closestKeyedAncestor;
-        } else {
-            // use parent
-            return this._parent;
-        }
     }
 }
