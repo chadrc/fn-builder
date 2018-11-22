@@ -30,6 +30,14 @@ describe(`Interface tests`, () => {
         expect(mul6_add2(3)).to.equal(20);
     });
 
+    it(`Can use pre-composed function`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const add3 = fn.add3;
+
+        expect(add3(8)).to.equal(11);
+    });
+
     it(`Can chain two composed functions`, () => {
         const fn = Fn.make(new MathFn());
 
