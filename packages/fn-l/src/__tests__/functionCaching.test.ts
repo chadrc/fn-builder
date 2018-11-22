@@ -2,6 +2,7 @@ import * as Fn from "../index";
 import {expect} from 'chai';
 import 'jest';
 import {MathFn} from "./MathFn";
+import {InternalsKey} from "../makeFnProxyHandler";
 
 describe(`Function Caching`, () => {
     it(`Can extract function name`, () => {
@@ -58,6 +59,19 @@ describe(`Function Caching`, () => {
         const mulIncAddName = Fn.nameOf(fn.mul(4).inc.add(3));
 
         expect(mulIncAddName).to.equal("add(number)(inc(mul(number)(__input__)))");
+    });
+
+    it(`Can get valueOf function and it equals internal function`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const inc: any = fn.inc;
+
+        // drill into internals to get func value
+        const internalValue = inc[InternalsKey]._func;
+
+        const value = inc.valueOf();
+
+        expect(value).to.equal(internalValue);
     });
 
     it(`Two functions references of same methods with no arguments are equal`, () => {
