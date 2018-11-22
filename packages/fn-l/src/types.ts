@@ -39,50 +39,49 @@ export class FnContext<T> {
 
         // if parent is null, then this is the root context
         // root context maintains the function cache
-        if (!parent) {
+        if (!this._parent) {
             this._contextCache = {};
             this._root = this;
         } else {
-            this._root = parent.root;
-            // Only child contexts have functions
+            // Maintain reference to root
+            this._root = this._parent.root;
 
+            // Only child contexts have functions
             this._closestKeyedAncestor = this.closestKeyedAncestor;
 
-            if (key === null) {
+            if (this._key === null) {
                 // This context is being created by a function call
                 // not by property access
 
-                // get function parent function
+                // get raw function parent function
                 this._rawFunc = this._parent._rawFunc;
-            } else {
-                // get function from context object with key
-                this._key = key;
-                this._rawFunc = obj[key] as unknown as GenericFunction;
-            }
 
-            // invoke our function if we were given arguments
-            if (args && args.length > 0) {
-                this._args = args;
-                this._rawFunc = this._rawFunc(...args);
+                // create new function by invoking parent function with given args
+                this._rawFunc = this._rawFunc(...(this._args || []));
 
-                // Need to now compose this function with closest keyed ancestor's parent
+                // Compose this function with closest keyed ancestor's parent
                 let closestKeyedAncestorParent = this._closestKeyedAncestor._parent;
                 if (closestKeyedAncestorParent !== this._root) {
                     this._func = (...input) => this._rawFunc(closestKeyedAncestorParent._func(...input));
                 } else {
+                    // is starting context
+                    // use raw function
                     this._func = this._rawFunc;
                 }
-            } else if (this._parent !== this._root) {
-                // unkeyed children already get comped with their keyed ancestor
-                // but now we need to comp with next keyed ancestor
-                // or the result of the next keyed ancestor and its unkeyed children
-                // this will be the parent of our closest keyed ancestor
-
-                this._func = (...input) => this._rawFunc(this._parent._func(...input));
             } else {
-                // is starting function
-                // use raw func
-                this._func = this._rawFunc;
+                // This context is being created by direct access to context object with key
+
+                // get function from context object with key
+                this._rawFunc = this._contextObject[this._key] as unknown as GenericFunction;
+
+                if (this._parent === this._root) {
+                    // is starting context
+                    // use raw function
+                    this._func = this._rawFunc;
+                } else {
+                    // compose it directly with its parent function
+                    this._func = (...input) => this._rawFunc(this._parent._func(...input));
+                }
             }
         }
     }
