@@ -4,7 +4,7 @@ import 'jest';
 import {MathFn} from "./MathFn";
 
 describe(`Function Caching`, () => {
-    it(`Two function chains with same methods are equal`, () => {
+    it(`Two function chains with same methods with no arguments are equal`, () => {
         const fn = Fn.make(new MathFn());
 
         const fn1 = fn.mul2.add3;
