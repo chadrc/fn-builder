@@ -22,7 +22,6 @@ export class FnContext<T> {
     private readonly _root: FnContext<T>;
     private readonly _args: any[];
     private readonly _closestKeyedAncestor: FnContext<T>;
-
     private readonly _func: GenericFunction;
     private readonly _rawFunc: GenericFunction;
 
