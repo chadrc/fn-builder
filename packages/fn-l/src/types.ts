@@ -43,7 +43,7 @@ export class FnContext<T> {
             this._root = this;
         } else {
             // Maintain reference to root
-            this._root = this._parent.root;
+            this._root = this._parent._root;
 
             // Only child contexts have functions
             this._closestKeyedAncestor = null;
@@ -94,10 +94,6 @@ export class FnContext<T> {
                 }
             }
         }
-    }
-
-    get root() {
-        return this._root;
     }
 
     get contextObject() {
