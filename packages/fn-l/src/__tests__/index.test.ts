@@ -82,6 +82,9 @@ describe(`Interface tests`, () => {
 
         const div10_2decimals = fn.precisionDiv(2)(8).mul(3);
 
+        // 1 / 8 = .125
+        // toFixed(.125) = .13
+        // .13 * 3 = .39
         expect(div10_2decimals(1)).to.equal(.39);
     });
 
