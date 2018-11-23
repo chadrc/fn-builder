@@ -107,14 +107,12 @@ describe(`Function Caching`, () => {
         expect(fn1).to.equal(fn2);
     });
 
-    // it(`Functions chained the same way are equal`, () => {
-    //     const fn = Fn.make(new MathFn());
-    //
-    //     const fn1 = fn.valuesInRange(4,12).sum.mul;//.add3;
-    //     // const fn2 = fn.valuesInRange(4,12).sum.mul(3).add3;
-    //
-    //     fn1(3);
-    //     console.log(fn1);
-    //     // expect(fn1).to.equal(fn2);
-    // });
+    it(`Functions chained the same way are equal`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const fn1 = fn.valuesInRange(4,12).sum.mul(3).add3;
+        const fn2 = fn.valuesInRange(4,12).sum.mul(3).add3;
+
+        expect(fn1).to.equal(fn2);
+    });
 });

@@ -23,7 +23,23 @@ export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWr
             }
         },
         apply: function (target: FnContextWrapper<T>, thisArg: any, argumentsList: any) {
-            let result = target.context.func(...argumentsList);
+            let result;
+
+            try {
+                result = target.context.func(...argumentsList);
+            } catch (e) {
+                // TODO: try switching logic here, do compose first with chance of failure else return normal value
+                // chance that calling the function will be with incorrect args
+                // so we try to compose with the arguments instead
+                // if that fails, then something else is wrong
+                return makeFnProxy(
+                    target.context.contextObject,
+                    target.context,
+                    null,
+                    argumentsList
+                );
+            }
+
             // if this function returned another function
             // wrap in proxy so it can be composed more
             if (typeof result === "function") {
