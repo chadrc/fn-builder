@@ -1,9 +1,7 @@
 import * as FnBuilder from "../index";
 import {expect} from 'chai';
 import 'jest';
-import {Fn} from "../types";
 import "./dynamicMulFunction";
-import {DynamicFn} from "../DynamicFn";
 
 declare module "../DynamicFn" {
     interface DynamicFn {
@@ -17,7 +15,7 @@ describe(`Importing functions in a DynamicFn`, () => {
     });
 
     it(`Can add function to DynamicFn`, () => {
-        const fn: Fn<DynamicFn> = FnBuilder.make();
+        const fn = FnBuilder.make();
 
         FnBuilder.addDynamic("add", (num: number) => (value: number) => value + num);
 
@@ -27,7 +25,7 @@ describe(`Importing functions in a DynamicFn`, () => {
     });
 
     it(`Can use imported dynamic function`, () => {
-        const fn: Fn<DynamicFn> = FnBuilder.make();
+        const fn = FnBuilder.make();
 
         const mul4 = fn.mul(4);
 
