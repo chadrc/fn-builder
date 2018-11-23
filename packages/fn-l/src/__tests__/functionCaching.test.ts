@@ -78,4 +78,13 @@ describe(`Function Caching`, () => {
 
         expect(fn1).to.equal(fn2);
     });
+
+    it(`Functions that take different arguments are not equal`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const fn1 = fn.add(3);
+        const fn2 = fn.add(2);
+
+        expect(fn1).to.not.equal(fn2);
+    });
 });
