@@ -1,4 +1,4 @@
-import {Fn, FnContext, FnContextWrapper} from "./types";
+import {Fn, FnContext, FnContextOptions, FnContextWrapper} from "./types";
 
 export const InternalsKey = "__FnInternals__";
 
@@ -15,7 +15,6 @@ export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWr
             // Proxy it for function composition
             if (!!(thisArg.context.contextObject[prop])) {
                 return makeFnProxy(
-                    thisArg.context.contextObject,
                     thisArg.context,
                     prop,
                     null
@@ -33,7 +32,6 @@ export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWr
                 // so we try to compose with the arguments instead
                 // if that fails, then something else is wrong
                 return makeFnProxy(
-                    target.context.contextObject,
                     target.context,
                     null,
                     argumentsList
@@ -44,7 +42,6 @@ export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWr
             // wrap in proxy so it can be composed more
             if (typeof result === "function") {
                 return makeFnProxy(
-                    target.context.contextObject,
                     target.context,
                     null,
                     argumentsList
@@ -56,12 +53,18 @@ export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWr
 };
 
 const makeFnProxy = <T extends object>(
-    obj: T,
     root: FnContext<T> = null,
     key: keyof T = null,
     args: any[] = [],
 ): Fn<T> => {
-    return FnContext.makeFnProxyObject(obj, root, key, args);
+    return FnContext.makeFnProxyObject(root, key, args);
 };
 
-export default makeFnProxy;
+const initFnProxy = <T extends object>(
+    obj: T,
+    options: FnContextOptions,
+): Fn<T> => {
+    return FnContext.makeFnRoot(obj, options);
+};
+
+export default initFnProxy;

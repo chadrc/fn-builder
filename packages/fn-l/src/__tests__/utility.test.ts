@@ -1,6 +1,7 @@
 import * as Fn from "../index";
+import {expect} from 'chai';
+import 'jest';
 import {MathFn} from "./MathFn";
-import {expect} from "chai";
 
 describe(`Fn utilities`, () => {
     it(`Can extract function name`, () => {
@@ -57,5 +58,15 @@ describe(`Fn utilities`, () => {
         const mulIncAddName = Fn.nameOf(fn.mul(4).inc.add(3));
 
         expect(mulIncAddName).to.equal("add(number)(inc(mul(number)(__input__)))");
+    });
+
+    it(`Fn option to use raw variable value when getting name`, () => {
+        const fn = Fn.make(new MathFn(), {
+            useArgValuesInName: true,
+        });
+
+        const mulIncAddName = Fn.nameOf(fn.mul(4).inc.add(3));
+
+        expect(mulIncAddName).to.equal("add(3)(inc(mul(4)(__input__)))");
     });
 });

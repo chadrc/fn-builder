@@ -10,6 +10,10 @@ interface CacheObject<T> {
     fn: Fn<T>
 }
 
+export interface FnContextOptions {
+    useArgValuesInName: boolean
+}
+
 export type GenericFunction = (...arg: any) => any
 
 export type FnPropertyFunction<T, F> = F extends (...arg: infer U) => any ?
@@ -28,6 +32,7 @@ export interface FnContextWrapper<T> {
 
 export class FnContext<T> {
     private readonly _contextObject: T;
+    private readonly _options: FnContextOptions;
     private readonly _parent?: FnContext<T>;
     private readonly _key?: keyof T;
     private readonly _contextCache?: { [key: string]: CacheObject<T> };
@@ -38,26 +43,24 @@ export class FnContext<T> {
     private readonly _rawFunc: GenericFunction;
     private readonly _name: string;
 
-    static makeFnProxyObject = <T extends object>(
+    static makeFnRoot = <T extends object>(
         obj: T,
+        options: FnContextOptions,
+    ) => {
+        // make a root context
+        const func = (() => {}) as unknown as FnContextWrapper<T>;
+        func.context = new FnContext<T>(obj, options);
+
+        // Root context doesn't get cached
+        // just create and return it
+        return new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
+    };
+
+    static makeFnProxyObject = <T extends object>(
         parentContext: FnContext<T> = null,
         key: keyof T = null,
         args: any[] = [],
     ): Fn<T> => {
-        if (parentContext === null) {
-            // make a root context
-            const func = (() => {}) as unknown as FnContextWrapper<T>;
-            func.context = new FnContext<T>(
-                obj,
-                parentContext,
-                key,
-                args
-            );
-
-            // Root context doesn't get cached
-            // just create and return it
-            return new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
-        }
 
         // Check root context's cache for existing object
         const root = parentContext._root;
@@ -177,12 +180,20 @@ export class FnContext<T> {
 
     constructor(
         obj: T,
-        parent: FnContext<T> = null,
+        parent: FnContext<T> | FnContextOptions,
         key: keyof T = null,
         args: any[] = [],
     ) {
         this._contextObject = obj;
-        this._parent = parent;
+
+        if (parent instanceof FnContext) {
+            this._parent = parent;
+        } else {
+            // Only root should have options
+            this._options = parent;
+            this._parent = null;
+        }
+
         this._key = key;
         this._args = args;
 
@@ -244,10 +255,12 @@ export class FnContext<T> {
             }
         }
 
+        const useArgValuesInName = this._root._options.useArgValuesInName;
         let argStr = argSets
             .reverse() // because we started at end
             .map(set =>
-                `(${set.map(arg => typeof arg).join(",")})`
+                `(${set.map(arg => useArgValuesInName ? arg : (typeof arg))
+                    .join(",")})`
             );
 
         name = `${key.toString()}${argStr.join("")}`;
