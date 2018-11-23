@@ -83,8 +83,10 @@ describe(`Function Caching`, () => {
         const fn1 = fn.map(f);
         const fn2 = fn.map(f2); // overrides fn1 because f and f2 toString result in same value
         const fn3 = fn.map(f);
+        const fn4 = fn.map(f2);
 
         expect(fn1).to.not.equal(fn3);
+        expect(fn2).to.not.equal(fn4);
     });
 
     it(`Functions that take objects are not equal with inline objects`, () => {
@@ -128,8 +130,10 @@ describe(`Function Caching`, () => {
         const fn1 = fn.context(obj1);
         const fn2 = fn.context(obj2);
         const fn3 = fn.context(obj1);
+        const fn4 = fn.context(obj2);
 
         expect(fn1).to.not.equal(fn3);
+        expect(fn2).to.not.equal(fn4);
     });
 
     it(`Functions that override fnCacheString don't override each other`, () => {
@@ -145,8 +149,10 @@ describe(`Function Caching`, () => {
         const fn1 = fn.map(f);
         const fn2 = fn.map(f2); // won't override fn1 because they have different cache keys
         const fn3 = fn.map(f);
+        const fn4 = fn.map(f2);
 
         expect(fn1).to.equal(fn3);
+        expect(fn2).to.equal(fn4);
     });
 
     it(`Objects that override fnCacheString don't override each other`, () => {
@@ -167,7 +173,9 @@ describe(`Function Caching`, () => {
         const fn1 = fn.context(obj1);
         const fn2 = fn.context(obj2);
         const fn3 = fn.context(obj1);
+        const fn4 = fn.context(obj2);
 
         expect(fn1).to.equal(fn3);
+        expect(fn2).to.equal(fn4);
     });
 });
