@@ -2,7 +2,6 @@ import * as Fn from "../index";
 import {expect} from 'chai';
 import 'jest';
 import {MathFn} from "./MathFn";
-import {InternalsKey} from "../makeFnProxyHandler";
 
 describe(`Function Caching`, () => {
     it(`Can extract function name`, () => {
@@ -84,6 +83,15 @@ describe(`Function Caching`, () => {
 
         const fn1 = fn.add(3);
         const fn2 = fn.add(2);
+
+        expect(fn1).to.not.equal(fn2);
+    });
+
+    it(`Functions that take a different function are not equal`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const fn1 = fn.map((num) => num + 1);
+        const fn2 = fn.map((num) => num + 1);
 
         expect(fn1).to.not.equal(fn2);
     });

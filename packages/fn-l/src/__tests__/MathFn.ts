@@ -9,6 +9,8 @@ export class MathFn {
     avg = (values: number[]) => this.sum(values) / values.length;
     inc = (value: number) => ++value;
 
+    map = (mapper: (num: number) => number) => (value: number) => mapper(value);
+
     add3 = this.add(3);
     mul2 = this.mul(2);
 }

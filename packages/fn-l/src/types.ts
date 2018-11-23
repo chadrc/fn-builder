@@ -1,5 +1,15 @@
 import {makeFnProxyHandler} from "./makeFnProxyHandler";
 
+interface CacheKey {
+    hash: string;
+    argSets: any[][]
+}
+
+interface CacheObject<T> {
+    key: CacheKey;
+    fn: Fn<T>
+}
+
 export type GenericFunction = (...arg: any) => any
 
 export type FnPropertyFunction<T, F> = F extends (...arg: infer U) => any ?
@@ -20,7 +30,7 @@ export class FnContext<T> {
     private readonly _contextObject: T;
     private readonly _parent?: FnContext<T>;
     private readonly _key?: keyof T;
-    private readonly _contextCache?: { [key: string]: Fn<T> };
+    private readonly _contextCache?: { [key: string]: CacheObject<T> };
     private readonly _root: FnContext<T>;
     private readonly _args: any[];
     private readonly _keyedRoot: FnContext<T>;
@@ -58,21 +68,62 @@ export class FnContext<T> {
             args,
         );
 
-        if (root._contextCache[cacheKey]) {
-            return root._contextCache[cacheKey];
-        } else {
-            const func = (() => {}) as unknown as FnContextWrapper<T>;
-            func.context = new FnContext<T>(
-                root.contextObject,
-                parentContext,
-                key,
-                args
-            );
+        if (root._contextCache[cacheKey.hash]) {
+            let cacheObject = root._contextCache[cacheKey.hash];
 
-            const fn = new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
-            root._contextCache[cacheKey] = fn;
-            return fn;
+            // hash matches
+            // but we need to compare the args
+            // or functions that take other functions or objects
+
+            const flatten = (prev: any[], curr: any[]) => {
+                prev.push(...curr);
+                return prev;
+            };
+
+            // first flatten the argSets to a single arg array
+            let existingCacheArgs = cacheObject.key.argSets.reduce(flatten, []);
+            let newCacheArgs = cacheKey.argSets.reduce(flatten, []);
+
+            // simple size check first
+            if (newCacheArgs.length === existingCacheArgs.length) {
+
+                let allAreEqual = true;
+                for (let i=0; i<newCacheArgs.length; i++) {
+                    const existing = existingCacheArgs[i];
+                    const n = newCacheArgs[i];
+                    if (existing !== n) {
+                        allAreEqual = false;
+                        break;
+                    }
+                }
+
+                if (allAreEqual) {
+                    // returned cached object
+                    return cacheObject.fn;
+                }
+            }
         }
+
+        // cache key wasn't in the cache
+        // or the arguments didn't match
+
+        // create a new fn object
+        const func = (() => {}) as unknown as FnContextWrapper<T>;
+        func.context = new FnContext<T>(
+            root.contextObject,
+            parentContext,
+            key,
+            args
+        );
+
+        const fn = new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
+
+        // put new fn object in cache
+        root._contextCache[cacheKey.hash] = {
+            key: cacheKey,
+            fn: fn
+        };
+        return fn;
     };
 
     private static compileCacheKeyForContext<T>(
@@ -82,8 +133,6 @@ export class FnContext<T> {
         args: any[] = []
     ) {
         let name;
-
-        // let key = this._key;
 
         let argSets = [];
         if (args && args.length > 0) {
@@ -120,7 +169,10 @@ export class FnContext<T> {
             }
         }
 
-        return name;
+        return {
+            hash: name,
+            argSets
+        };
     }
 
     constructor(
