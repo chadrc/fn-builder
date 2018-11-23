@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import 'jest';
 import {TestFn} from "./TestFn";
 
-describe(`Fn utilities`, () => {
+describe(`Naming of functions`, () => {
     it(`Can extract function name`, () => {
         const fn = Fn.from(new TestFn());
 
