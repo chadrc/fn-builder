@@ -31,6 +31,18 @@ describe(`Function Caching`, () => {
         expect(fn1).to.not.equal(fn2);
     });
 
+    it(`Functions that take different arguments don't override each other in cache`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const fn1 = fn.add(3);
+        const fn2 = fn.add(2);
+        const fn3 = fn.add(3);
+
+        expect(fn1).to.not.equal(fn2);
+        expect(fn1).to.equal(fn3);
+        expect(fn2).to.not.equal(fn3);
+    });
+
     it(`Functions that take a different function are not equal`, () => {
         const fn = Fn.make(new MathFn());
 

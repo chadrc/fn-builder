@@ -1,6 +1,7 @@
 import {makeFnProxyHandler} from "./makeFnProxyHandler";
 
 interface CacheKey {
+    key: string,
     name: string;
     argSets: any[][]
 }
@@ -71,8 +72,8 @@ export class FnContext<T> {
             args,
         );
 
-        if (root._contextCache[cacheKey.name]) {
-            let cacheObject = root._contextCache[cacheKey.name];
+        if (root._contextCache[cacheKey.key]) {
+            let cacheObject = root._contextCache[cacheKey.key];
 
             // hash matches
             // but we need to compare the args
@@ -122,7 +123,7 @@ export class FnContext<T> {
         const fn = new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
 
         // put new fn object in cache
-        root._contextCache[cacheKey.name] = {
+        root._contextCache[cacheKey.key] = {
             key: cacheKey,
             fn: fn
         };
@@ -136,6 +137,7 @@ export class FnContext<T> {
         args: any[] = []
     ): CacheKey {
         let name;
+        let keyName;
 
         let argSets = [];
         if (args && args.length > 0) {
@@ -162,15 +164,30 @@ export class FnContext<T> {
         }
 
         // Format arg sets into comma separated lists wrapped in parenthesis
-        const useArgValues = rootContext._options.useArgValuesInName;
+        // Use arg values for cache key
         let argStr = argSets
             .reverse() // because we started at end
             .map(set =>
-                `(${set.map(arg => useArgValues ? `${arg}` : typeof arg)
+                `(${set.map(arg => `${arg}`)
                     .join(",")})`
             );
 
-        name = `${rootKey.toString()}${argStr.join("")}`;
+        keyName = `${rootKey.toString()}${argStr.join("")}`;
+
+        if (rootContext._options.useArgValuesInName) {
+            name = keyName;
+        } else {
+            // If not using arg values in name
+            // make new string with not values
+            let noArgValueStr = argSets
+                .reverse() // because we started at end
+                .map(set =>
+                    `(${set.map(arg => typeof arg)
+                        .join(",")})`
+                );
+
+            name = `${rootKey.toString()}${noArgValueStr.join("")}`;
+        }
 
         if (parentContext !== rootContext) {
 
@@ -198,6 +215,7 @@ export class FnContext<T> {
         }
 
         return {
+            key: keyName,
             name,
             argSets
         };
