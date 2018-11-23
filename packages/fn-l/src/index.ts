@@ -23,3 +23,9 @@ export const nameOf = (fn: Fn<any>) => {
     const context = (fn as any)[InternalsKey] as FnContext<any>;
     return context.name;
 };
+
+export const addDynamic = (name: string, func: (...args: any[]) => any) => {
+    Object.defineProperty(DynamicFn.prototype, name, {
+        value: func
+    });
+};
