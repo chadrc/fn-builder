@@ -63,6 +63,20 @@ describe(`Function Caching`, () => {
         expect(fn1).to.equal(fn2);
     });
 
+    it(`Functions that take a constant function do override each other in cache`, () => {
+        const fn = Fn.make(new MathFn());
+
+        // Use same implementation because entire function is converted to string
+        const f = (num: number) => num + 1;
+        const f2 = (num: number) => num + 1;
+
+        const fn1 = fn.map(f);
+        const fn2 = fn.map(f2); // overrides fn1 because f and f2 toString result in same value
+        const fn3 = fn.map(f);
+
+        expect(fn1).to.not.equal(fn3);
+    });
+
     it(`Functions chained the same way are equal`, () => {
         const fn = Fn.make(new MathFn());
 
