@@ -1,11 +1,11 @@
 {
-  "name": "fn-l",
+  "name": "fn-builder",
   "version": "0.0.1",
   "description": "Function composition library.",
   "author": "chadcollins <chadrcollins91@gmail.com>",
   "homepage": "",
   "license": "MIT",
-  "main": "lib/fn-l.js",
+  "main": "lib/fn-builder.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"

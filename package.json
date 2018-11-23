@@ -1,5 +1,5 @@
 {
-  "name": "fn-l",
+  "name": "fn-builder",
   "version": "0.0.1",
   "description": "Function composition library.",
   "main": "index.js",
