@@ -148,17 +148,17 @@ describe(`Function Caching`, () => {
         expect(fn1).to.equal(fn3);
     });
 
-    it(`Objects that override valueOf don't overrid each other`, () => {
+    it(`Objects that override toString don't override each other`, () => {
         const fn = Fn.make(new MathFn());
 
         const obj1 = {
             value: "Value",
-            valueOf: () => "obj1"
+            toString: () => "obj1"
         };
 
         const obj2 = {
             value: "Value 2",
-            valueOf: () => "obj2"
+            toString: () => "obj2"
         };
 
         const fn1 = fn.context(obj1);
