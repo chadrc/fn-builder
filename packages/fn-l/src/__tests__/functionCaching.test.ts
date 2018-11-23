@@ -61,11 +61,20 @@ describe(`Function Caching`, () => {
         expect(mulIncAddName).to.equal("add(number)(inc(mul(number)(__input__)))");
     });
 
-    it(`Two functions references of same methods with no arguments are equal`, () => {
+    it(`Functions references of same methods with no arguments are equal`, () => {
         const fn = Fn.make(new MathFn());
 
         const fn1 = fn.sum;
         const fn2 = fn.sum;
+
+        expect(fn1).to.equal(fn2);
+    });
+
+    it(`Functions that take the same arguments are equal`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const fn1 = fn.add(3);
+        const fn2 = fn.add(3);
 
         expect(fn1).to.equal(fn2);
     });
