@@ -95,4 +95,15 @@ describe(`Function Caching`, () => {
 
         expect(fn1).to.not.equal(fn2);
     });
+
+    it(`Functions that take a constant function are equal`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const f = (num: number) => num + 1;
+
+        const fn1 = fn.map(f);
+        const fn2 = fn.map(f);
+
+        expect(fn1).to.equal(fn2);
+    });
 });
