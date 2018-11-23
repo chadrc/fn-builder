@@ -172,10 +172,6 @@ export class FnContext<T> {
         return this._func;
     }
 
-    public valueOf() {
-        return this._func;
-    }
-
     private compileName(): string {
         let name;
 
