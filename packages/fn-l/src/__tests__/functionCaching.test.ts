@@ -2,6 +2,7 @@ import * as Fn from "../index";
 import {expect} from 'chai';
 import 'jest';
 import {MathFn} from "./MathFn";
+import {Cacheable} from "../types";
 
 describe(`Function Caching`, () => {
     it(`Functions references of same methods with no arguments are equal`, () => {
@@ -131,15 +132,15 @@ describe(`Function Caching`, () => {
         expect(fn1).to.not.equal(fn3);
     });
 
-    it(`Functions that override toString don't override each other`, () => {
+    it(`Functions that override fnCacheString don't override each other`, () => {
         const fn = Fn.make(new MathFn());
 
         // Use same implementation because entire function is converted to string
         const f = (num: number) => num + 1;
-        f.toString = () => "func1";
+        (f as unknown as Cacheable).fnCacheString = () => "func1";
 
         const f2 = (num: number) => num + 1;
-        f.toString = () => "func2";
+        (f as unknown as Cacheable).fnCacheString = "func2";
 
         const fn1 = fn.map(f);
         const fn2 = fn.map(f2); // won't override fn1 because they have different cache keys
@@ -148,17 +149,19 @@ describe(`Function Caching`, () => {
         expect(fn1).to.equal(fn3);
     });
 
-    it(`Objects that override toString don't override each other`, () => {
+    it(`Objects that override fnCacheString don't override each other`, () => {
         const fn = Fn.make(new MathFn());
 
         const obj1 = {
             value: "Value",
-            toString: () => "obj1"
+            get fnCacheString() {
+                return "obj1";
+            }
         };
 
         const obj2 = {
             value: "Value 2",
-            toString: () => "obj2"
+            fnCacheString: () => "obj2"
         };
 
         const fn1 = fn.context(obj1);

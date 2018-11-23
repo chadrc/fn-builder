@@ -11,6 +11,12 @@ interface CacheObject<T> {
     fn: Fn<T>
 }
 
+export type CacheableFunction = () => string;
+
+export interface Cacheable {
+    fnCacheString: string | CacheableFunction
+}
+
 export interface FnContextOptions {
     useArgValuesInName: boolean
 }
@@ -163,14 +169,27 @@ export class FnContext<T> {
             }
         }
 
+        // Function to convert an arg value to a key that will help make each entry unique
+        const getCacheKey = (arg: Cacheable | any) => {
+            // Start with letting JavaScript toString value
+            let key = `${arg}`;
+            if (arg && arg.fnCacheString) {
+                // If cacheable get custom cache key
+                // can be a function or string literal
+                if (typeof arg.fnCacheString === "function") {
+                    key = arg.fnCacheString();
+                } else {
+                    key = arg.fnCacheString;
+                }
+            }
+
+            return key;
+        };
+
         // Format arg sets into comma separated lists wrapped in parenthesis
-        // Use arg values for cache key
         let argStr = argSets
             .reverse() // because we started at end
-            .map(set =>
-                `(${set.map(arg => `${arg}`)
-                    .join(",")})`
-            );
+            .map(set => `(${set.map(getCacheKey).join(",")})`);
 
         keyName = `${rootKey.toString()}${argStr.join("")}`;
 
