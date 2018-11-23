@@ -2,19 +2,13 @@ import {Fn, FnContext, FnContextWrapper} from "./types";
 
 export const InternalsKey = "__FnInternals__";
 
-const valueOf = "valueOf";
-
-const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T>> => {
+export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T>> => {
     return {
         set: () => {throw new Error("Cannot set values on Fn object.")},
         deleteProperty: () => {throw new Error("Cannot delete values on Fn object.")},
         get: function (thisArg: FnContextWrapper<T>, prop: keyof T) {
             if (prop === InternalsKey) {
                 return thisArg.context;
-            }
-
-            if (prop === valueOf) {
-                return () => thisArg.context.valueOf();
             }
 
             // If requested prop is on the underlying object
@@ -45,28 +39,13 @@ const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T
     }
 };
 
-const makeFnProxyObject = <T extends object>(target: FnContextWrapper<T>): Fn<T> => {
-    return new Proxy(target, makeFnProxyHandler()) as unknown as Fn<T>;
-};
-
-const makeFnContext = <T>(
-    obj: T,
-    parent: FnContext<T> = null,
-    key: keyof T = null,
-    args: any[] = null,
-): FnContextWrapper<T> => {
-    const func = () => {};
-    func.context = new FnContext<T>(obj, parent, key, args);
-    return func;
-};
-
 const makeFnProxy = <T extends object>(
     obj: T,
     root: FnContext<T> = null,
     key: keyof T = null,
     args: any[] = [],
 ): Fn<T> => {
-    return makeFnProxyObject(makeFnContext(obj, root, key, args));
+    return FnContext.makeFnProxyObject(obj, root, key, args);
 };
 
 export default makeFnProxy;

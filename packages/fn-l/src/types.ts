@@ -1,3 +1,5 @@
+import {makeFnProxyHandler} from "./makeFnProxyHandler";
+
 export type GenericFunction = (...arg: any) => any
 
 export type FnPropertyFunction<T, F> = F extends (...arg: infer U) => any ?
@@ -14,22 +16,112 @@ export interface FnContextWrapper<T> {
     context: FnContext<T>
 }
 
-interface CacheItem {
-    func: GenericFunction;
-    rawFunc: GenericFunction;
-}
-
 export class FnContext<T> {
     private readonly _contextObject: T;
     private readonly _parent?: FnContext<T>;
     private readonly _key?: keyof T;
-    private readonly _contextCache?: { [key: string]: CacheItem };
+    private readonly _contextCache?: { [key: string]: Fn<T> };
     private readonly _root: FnContext<T>;
     private readonly _args: any[];
     private readonly _keyedRoot: FnContext<T>;
     private readonly _func: GenericFunction;
     private readonly _rawFunc: GenericFunction;
     private readonly _name: string;
+
+    static makeFnProxyObject = <T extends object>(
+        obj: T,
+        parentContext: FnContext<T> = null,
+        key: keyof T = null,
+        args: any[] = [],
+    ): Fn<T> => {
+        if (parentContext === null) {
+            // make a root context
+            const func = (() => {}) as unknown as FnContextWrapper<T>;
+            func.context = new FnContext<T>(
+                obj,
+                parentContext,
+                key,
+                args
+            );
+
+            // Root context doesn't get cached
+            // just create and return it
+            return new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
+        }
+
+        // Check root context's cache for existing object
+        const root = parentContext._root;
+        const cacheKey = FnContext.compileCacheKeyForContext<T>(
+            root,
+            parentContext,
+            key,
+            args,
+        );
+
+        if (root._contextCache[cacheKey]) {
+            return root._contextCache[cacheKey];
+        } else {
+            const func = (() => {}) as unknown as FnContextWrapper<T>;
+            func.context = new FnContext<T>(
+                root.contextObject,
+                parentContext,
+                key,
+                args
+            );
+
+            const fn = new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
+            root._contextCache[cacheKey] = fn;
+            return fn;
+        }
+    };
+
+    private static compileCacheKeyForContext<T>(
+        rootContext: FnContext<T>,
+        parentContext: FnContext<T>,
+        key: keyof T = null,
+        args: any[] = []
+    ) {
+        let name;
+
+        // let key = this._key;
+
+        let argSets = [];
+        if (args && args.length > 0) {
+            argSets.push(args);
+        }
+
+        if (key === null && parentContext._keyedRoot) {
+            key = parentContext._keyedRoot._key;
+
+            // get remaining args
+            let next = parentContext;
+            while (next !== parentContext._keyedRoot && next !== rootContext) {
+                if (next._args) {
+                    argSets.push(next._args);
+                }
+                next = next._parent;
+            }
+        }
+
+        let argStr = argSets
+            .reverse() // because we started at end
+            .map(set =>
+                `(${set.map(arg => `${arg}`).join(",")})`
+            );
+
+        name = `${key.toString()}${argStr.join("")}`;
+
+        if (parentContext._keyedRoot) {
+            // start past already used contexts
+            const wrappedContext = parentContext._keyedRoot._parent;
+
+            if (wrappedContext !== rootContext) {
+                name = `${name}(${wrappedContext.name})`;
+            }
+        }
+
+        return name;
+    }
 
     constructor(
         obj: T,
@@ -61,14 +153,7 @@ export class FnContext<T> {
             // root doesn't need a name
             this._name = this.compileName();
 
-            let cacheKey = this.compileCacheKey();
-
-            let compiledFunctions;
-            if (this._root._contextCache[cacheKey]) {
-                compiledFunctions = this._root._contextCache[cacheKey];
-            } else {
-                compiledFunctions = this.compileFunctions();
-            }
+            let compiledFunctions = this.compileFunctions();
 
             this._func = compiledFunctions.func;
             this._rawFunc = compiledFunctions.rawFunc;
@@ -128,44 +213,6 @@ export class FnContext<T> {
 
         if (this._keyedRoot._parent === this._root) {
             name += "(__input__)";
-        }
-
-        return name;
-    }
-
-    private compileCacheKey() {
-        let name;
-
-        let key = this._key;
-
-        let argSets = [];
-
-        if (key === null) {
-            key = this._keyedRoot._key;
-
-            // get remaining args
-            let next = this as FnContext<T>;
-            while (next !== this._keyedRoot && next !== this._root) {
-                if (next._args) {
-                    argSets.push(next._args);
-                }
-                next = next._parent;
-            }
-        }
-
-        let argStr = argSets
-            .reverse() // because we started at end
-            .map(set =>
-                `(${set.map(arg => `${arg}`).join(",")})`
-            );
-
-        name = `${key.toString()}${argStr.join("")}`;
-
-        // start past already used contexts
-        const wrappedContext = this._keyedRoot._parent;
-
-        if (wrappedContext !== this._root) {
-            name = `${name}(${wrappedContext.name})`;
         }
 
         return name;
