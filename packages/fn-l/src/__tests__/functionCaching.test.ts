@@ -130,4 +130,41 @@ describe(`Function Caching`, () => {
 
         expect(fn1).to.not.equal(fn3);
     });
+
+    it(`Functions that override valueOf don't override each other`, () => {
+        const fn = Fn.make(new MathFn());
+
+        // Use same implementation because entire function is converted to string
+        const f = (num: number) => num + 1;
+        f.valueOf = () => "func1";
+
+        const f2 = (num: number) => num + 1;
+        f.valueOf = () => "func2";
+
+        const fn1 = fn.map(f);
+        const fn2 = fn.map(f2); // won't override fn1 because they have different cache keys
+        const fn3 = fn.map(f);
+
+        expect(fn1).to.equal(fn3);
+    });
+
+    it(`Objects that override valueOf don't overrid each other`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const obj1 = {
+            value: "Value",
+            valueOf: () => "obj1"
+        };
+
+        const obj2 = {
+            value: "Value 2",
+            valueOf: () => "obj2"
+        };
+
+        const fn1 = fn.context(obj1);
+        const fn2 = fn.context(obj2);
+        const fn3 = fn.context(obj1);
+
+        expect(fn1).to.equal(fn3);
+    });
 });

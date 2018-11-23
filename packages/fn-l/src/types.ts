@@ -168,7 +168,7 @@ export class FnContext<T> {
         let argStr = argSets
             .reverse() // because we started at end
             .map(set =>
-                `(${set.map(arg => `${arg}`)
+                `(${set.map(arg => arg ? arg.valueOf() : `${arg}`)
                     .join(",")})`
             );
 
