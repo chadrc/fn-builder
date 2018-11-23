@@ -178,7 +178,7 @@ export class FnContext<T> {
         };
     }
 
-    constructor(
+    private constructor(
         obj: T,
         parent: FnContext<T> | FnContextOptions,
         key: keyof T = null,
