@@ -11,6 +11,8 @@ export class MathFn {
 
     map = (mapper: (num: number) => number) => (value: number) => mapper(value);
 
+    context = (obj: {[key: string]: any}) => (prop: string) => obj[prop];
+
     add3 = this.add(3);
     mul2 = this.mul(2);
 }

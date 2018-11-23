@@ -77,6 +77,51 @@ describe(`Function Caching`, () => {
         expect(fn1).to.not.equal(fn3);
     });
 
+    it(`Functions that take objects are not equal with inline objects`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const fn1 = fn.context({
+            value: "Value"
+        });
+
+        const fn2 = fn.context({
+            value: "Value"
+        });
+
+        expect(fn1).to.not.equal(fn2);
+    });
+
+    it(`Functions that take objects are equal with constant object`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const obj = {
+            value: "Value"
+        };
+
+        const fn1 = fn.context(obj);
+        const fn2 = fn.context(obj);
+
+        expect(fn1).to.equal(fn2);
+    });
+
+    it(`Functions that take objects override each other in cache`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const obj1 = {
+            value: "Value"
+        };
+
+        const obj2 = {
+            value: "Value"
+        };
+
+        const fn1 = fn.context(obj1);
+        const fn2 = fn.context(obj2);
+        const fn3 = fn.context(obj1);
+
+        expect(fn1).to.not.equal(fn3);
+    });
+
     it(`Functions chained the same way are equal`, () => {
         const fn = Fn.make(new MathFn());
 
