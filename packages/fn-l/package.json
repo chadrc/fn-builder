@@ -40,7 +40,7 @@
     ],
     "testURL": "http://localhost",
     "transform": {
-      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "\\.(ts|tsx)$": "ts-jest"
     },
     "testRegex": "src/__tests__/.*\\.test\\.(ts|tsx|js)$"
   }
