@@ -1,11 +1,11 @@
 import * as Fn from "../index";
 import {expect} from 'chai';
 import 'jest';
-import {MathFn} from "./MathFn";
+import {TestFn} from "./TestFn";
 
 describe(`Fn utilities`, () => {
     it(`Can extract function name`, () => {
-        const fn = Fn.make(new MathFn());
+        const fn = Fn.make(new TestFn());
 
         const sumName = Fn.nameOf(fn.sum);
 
@@ -13,7 +13,7 @@ describe(`Fn utilities`, () => {
     });
 
     it(`Name of composed function includes variable type`, () => {
-        const fn = Fn.make(new MathFn());
+        const fn = Fn.make(new TestFn());
 
         const addName = Fn.nameOf(fn.add(4));
 
@@ -21,7 +21,7 @@ describe(`Fn utilities`, () => {
     });
 
     it(`Name of composed function includes variable types of all calls`, () => {
-        const fn = Fn.make(new MathFn());
+        const fn = Fn.make(new TestFn());
 
         const precisionDivName = Fn.nameOf(fn.precisionDiv(2)(10));
 
@@ -29,7 +29,7 @@ describe(`Fn utilities`, () => {
     });
 
     it(`Name of function with multiple parameters displays all of them`, () => {
-        const fn = Fn.make(new MathFn());
+        const fn = Fn.make(new TestFn());
 
         const valuesInRangeName = Fn.nameOf(fn.valuesInRange(3, 8));
 
@@ -37,7 +37,7 @@ describe(`Fn utilities`, () => {
     });
 
     it(`Name of function chain contains all links`, () => {
-        const fn = Fn.make(new MathFn());
+        const fn = Fn.make(new TestFn());
 
         const sumIncName = Fn.nameOf(fn.sum.inc);
 
@@ -45,7 +45,7 @@ describe(`Fn utilities`, () => {
     });
 
     it(`Name of function chain with multiple functions arguments`, () => {
-        const fn = Fn.make(new MathFn());
+        const fn = Fn.make(new TestFn());
 
         const mulIncName = Fn.nameOf(fn.mul(4).inc);
 
@@ -53,7 +53,7 @@ describe(`Fn utilities`, () => {
     });
 
     it(`Name of function chain with multiple functions with arguments`, () => {
-        const fn = Fn.make(new MathFn());
+        const fn = Fn.make(new TestFn());
 
         const mulIncAddName = Fn.nameOf(fn.mul(4).inc.add(3));
 
@@ -61,7 +61,7 @@ describe(`Fn utilities`, () => {
     });
 
     it(`Fn option to use raw variable value when getting name`, () => {
-        const fn = Fn.make(new MathFn(), {
+        const fn = Fn.make(new TestFn(), {
             useArgValuesInName: true,
         });
 

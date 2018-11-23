@@ -1,4 +1,4 @@
-export class MathFn {
+export class TestFn {
     addValues = (num1: number, num2: number) => num1 + num2;
     add = (num: number) => (value: number) => value + num;
     mul = (num: number) => (value: number) => value * num;
