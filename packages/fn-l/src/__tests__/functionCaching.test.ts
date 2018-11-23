@@ -43,6 +43,15 @@ describe(`Function Caching`, () => {
         expect(fn2).to.not.equal(fn3);
     });
 
+    it(`Functions chained the same way are equal`, () => {
+        const fn = Fn.make(new MathFn());
+
+        const fn1 = fn.valuesInRange(4,12).sum.mul(3).add3;
+        const fn2 = fn.valuesInRange(4,12).sum.mul(3).add3;
+
+        expect(fn1).to.equal(fn2);
+    });
+
     it(`Functions that take a different function are not equal`, () => {
         const fn = Fn.make(new MathFn());
 
@@ -120,14 +129,5 @@ describe(`Function Caching`, () => {
         const fn3 = fn.context(obj1);
 
         expect(fn1).to.not.equal(fn3);
-    });
-
-    it(`Functions chained the same way are equal`, () => {
-        const fn = Fn.make(new MathFn());
-
-        const fn1 = fn.valuesInRange(4,12).sum.mul(3).add3;
-        const fn2 = fn.valuesInRange(4,12).sum.mul(3).add3;
-
-        expect(fn1).to.equal(fn2);
     });
 });
