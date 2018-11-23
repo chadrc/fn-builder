@@ -3,7 +3,6 @@ import {makeFnProxyHandler} from "./makeFnProxyHandler";
 interface CacheKey {
     key: string,
     name: string;
-    argSets: any[][]
 }
 
 interface CacheObject<T> {
@@ -87,7 +86,6 @@ export class FnContext<T> {
         }
 
         // cache key wasn't in the cache
-        // or the arguments didn't match
 
         // create a new fn object
         const func = (() => {}) as unknown as FnContextWrapper<T>;
@@ -211,8 +209,7 @@ export class FnContext<T> {
 
         return {
             key: keyName,
-            name,
-            argSets
+            name
         };
     }
 
