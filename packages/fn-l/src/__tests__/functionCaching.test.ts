@@ -72,6 +72,17 @@ describe(`Function Caching`, () => {
         expect(fn1).to.equal(fn2);
     });
 
+    it(`Functions chained with different arguments aren't equal`, () => {
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
+
+        const fn1 = fn.valuesInRange(4,12).sum.mul(3).add3;
+        const fn2 = fn.valuesInRange(4,12).sum.mul(5).add3;
+
+        expect(fn1).to.not.equal(fn2);
+    });
+
     it(`Functions that take a different function are not equal`, () => {
         const fn = Fn.make(new TestFn(), {
             caching: true

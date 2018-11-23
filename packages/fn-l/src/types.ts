@@ -50,6 +50,7 @@ export class FnContext<T> {
     private readonly _func: GenericFunction;
     private readonly _rawFunc: GenericFunction;
     private readonly _name: string;
+    private readonly _cacheKey: string;
 
     static makeFnRoot = <T extends object>(
         obj: T,
@@ -124,6 +125,7 @@ export class FnContext<T> {
         func.context = new FnContext<T>(
             cacheKey.name,
             parentContext,
+            cacheKey.key,
             key,
             args
         );
@@ -225,13 +227,16 @@ export class FnContext<T> {
             }
 
             if (wrappedContext !== rootContext) {
+                keyName = `${keyName}(${wrappedContext._cacheKey})`;
                 name = `${name}(${wrappedContext._name})`;
             } else {
                 // No wrapped context, this is top of hierarchy
+                // only name get input on end for display
                 name += "(__input__)";
             }
         } else {
             // No wrapped context, this is top of hierarchy
+            // only name get input on end for display
             name += "(__input__)";
         }
 
@@ -245,6 +250,7 @@ export class FnContext<T> {
     private constructor(
         obj: T | string,
         parent: FnContext<T> | FnContextOptions,
+        cacheKey: string = null,
         key: keyof T = null,
         args: any[] = [],
     ) {
@@ -264,6 +270,7 @@ export class FnContext<T> {
             this._parent = null;
         }
 
+        this._cacheKey = cacheKey;
         this._key = key;
         this._args = args;
 
