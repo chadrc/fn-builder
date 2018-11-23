@@ -3,7 +3,6 @@ import {expect} from 'chai';
 import 'jest';
 import "./dynamicMulFunction";
 import {MyDynamicFn} from "./MyDynamicFn";
-import {DynamicFn} from "../DynamicFn";
 
 declare module "../DynamicFn" {
     interface DynamicFn {
