@@ -18,7 +18,8 @@ export interface Cacheable {
 }
 
 export interface FnContextOptions {
-    useArgValuesInName: boolean
+    useArgValuesInName?: boolean;
+    caching?: boolean
 }
 
 export type GenericFunction = (...arg: any) => any
@@ -78,7 +79,8 @@ export class FnContext<T> {
             args,
         );
 
-        if (root._contextCache[cacheKey.key]) {
+        if (root._options.caching
+            && root._contextCache[cacheKey.key]) {
             let cacheObject = root._contextCache[cacheKey.key];
 
             // hash matches

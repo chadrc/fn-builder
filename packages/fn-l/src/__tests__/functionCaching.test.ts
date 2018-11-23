@@ -5,8 +5,19 @@ import {TestFn} from "./TestFn";
 import {Cacheable} from "../types";
 
 describe(`Function Caching`, () => {
-    it(`Functions references of same methods with no arguments are equal`, () => {
+    it(`Function caching is off by default`, () => {
         const fn = Fn.make(new TestFn());
+
+        const fn1 = fn.sum;
+        const fn2 = fn.sum;
+
+        expect(fn1).to.not.equal(fn2);
+    });
+
+    it(`Functions references of same methods with no arguments are equal`, () => {
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const fn1 = fn.sum;
         const fn2 = fn.sum;
@@ -15,7 +26,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take the same arguments are equal`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const fn1 = fn.add(3);
         const fn2 = fn.add(3);
@@ -24,7 +37,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take different arguments are not equal`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const fn1 = fn.add(3);
         const fn2 = fn.add(2);
@@ -33,7 +48,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take different arguments don't override each other in cache`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const fn1 = fn.add(3);
         const fn2 = fn.add(2);
@@ -45,7 +62,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions chained the same way are equal`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const fn1 = fn.valuesInRange(4,12).sum.mul(3).add3;
         const fn2 = fn.valuesInRange(4,12).sum.mul(3).add3;
@@ -54,7 +73,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take a different function are not equal`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const fn1 = fn.map((num) => num + 1);
         const fn2 = fn.map((num) => num + 1);
@@ -63,7 +84,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take a constant function are equal`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const f = (num: number) => num + 1;
 
@@ -74,7 +97,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take a constant function do override each other in cache`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         // Use same implementation because entire function is converted to string
         const f = (num: number) => num + 1;
@@ -90,7 +115,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take objects are not equal with inline objects`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const fn1 = fn.context({
             value: "Value"
@@ -104,7 +131,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take objects are equal with constant object`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const obj = {
             value: "Value"
@@ -117,7 +146,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take objects override each other in cache`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const obj1 = {
             value: "Value"
@@ -137,7 +168,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that override fnCacheString don't override each other`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         // Use same implementation because entire function is converted to string
         const f = (num: number) => num + 1;
@@ -156,7 +189,9 @@ describe(`Function Caching`, () => {
     });
 
     it(`Objects that override fnCacheString don't override each other`, () => {
-        const fn = Fn.make(new TestFn());
+        const fn = Fn.make(new TestFn(), {
+            caching: true
+        });
 
         const obj1 = {
             value: "Value",
