@@ -112,7 +112,7 @@ describe(`Function Caching`, () => {
         };
 
         const obj2 = {
-            value: "Value"
+            value: "Value 2"
         };
 
         const fn1 = fn.context(obj1);
