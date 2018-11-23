@@ -1,7 +1,7 @@
 import {makeFnProxyHandler} from "./makeFnProxyHandler";
 
 interface CacheKey {
-    hash: string;
+    name: string;
     argSets: any[][]
 }
 
@@ -64,15 +64,15 @@ export class FnContext<T> {
 
         // Check root context's cache for existing object
         const root = parentContext._root;
-        const cacheKey = FnContext.compileCacheKeyForContext<T>(
+        const cacheKey: CacheKey = FnContext.compileCacheKeyForContext<T>(
             root,
             parentContext,
             key,
             args,
         );
 
-        if (root._contextCache[cacheKey.hash]) {
-            let cacheObject = root._contextCache[cacheKey.hash];
+        if (root._contextCache[cacheKey.name]) {
+            let cacheObject = root._contextCache[cacheKey.name];
 
             // hash matches
             // but we need to compare the args
@@ -122,7 +122,7 @@ export class FnContext<T> {
         const fn = new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
 
         // put new fn object in cache
-        root._contextCache[cacheKey.hash] = {
+        root._contextCache[cacheKey.name] = {
             key: cacheKey,
             fn: fn
         };
@@ -134,7 +134,7 @@ export class FnContext<T> {
         parentContext: FnContext<T>,
         key: keyof T = null,
         args: any[] = []
-    ) {
+    ): CacheKey {
         let name;
 
         let argSets = [];
@@ -173,7 +173,7 @@ export class FnContext<T> {
         }
 
         return {
-            hash: name,
+            name,
             argSets
         };
     }
