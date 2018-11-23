@@ -83,38 +83,7 @@ export class FnContext<T> {
         if (root._options.caching
             && root._contextCache[cacheKey.key]) {
             let cacheObject = root._contextCache[cacheKey.key];
-
-            // hash matches
-            // but we need to compare the args
-            // or functions that take other functions or objects
-
-            const flatten = (prev: any[], curr: any[]) => {
-                prev.push(...curr);
-                return prev;
-            };
-
-            // first flatten the argSets to a single arg array
-            let existingCacheArgs = cacheObject.key.argSets.reduce(flatten, []);
-            let newCacheArgs = cacheKey.argSets.reduce(flatten, []);
-
-            // simple size check first
-            if (newCacheArgs.length === existingCacheArgs.length) {
-
-                let allAreEqual = true;
-                for (let i=0; i<newCacheArgs.length; i++) {
-                    const existing = existingCacheArgs[i];
-                    const n = newCacheArgs[i];
-                    if (existing !== n) {
-                        allAreEqual = false;
-                        break;
-                    }
-                }
-
-                if (allAreEqual) {
-                    // returned cached object
-                    return cacheObject.fn;
-                }
-            }
+            return cacheObject.fn;
         }
 
         // cache key wasn't in the cache

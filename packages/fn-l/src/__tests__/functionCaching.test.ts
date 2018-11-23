@@ -83,7 +83,7 @@ describe(`Function Caching`, () => {
         expect(fn1).to.not.equal(fn2);
     });
 
-    it(`Functions that take a different function are not equal`, () => {
+    it(`Functions that take a inline functions with same implementations are equal`, () => {
         const fn = Fn.make(new TestFn(), {
             caching: true
         });
@@ -91,7 +91,7 @@ describe(`Function Caching`, () => {
         const fn1 = fn.map((num) => num + 1);
         const fn2 = fn.map((num) => num + 1);
 
-        expect(fn1).to.not.equal(fn2);
+        expect(fn1).to.equal(fn2);
     });
 
     it(`Functions that take a constant function are equal`, () => {
@@ -107,7 +107,7 @@ describe(`Function Caching`, () => {
         expect(fn1).to.equal(fn2);
     });
 
-    it(`Functions that take a constant function do override each other in cache`, () => {
+    it(`Functions with same implementation are equal`, () => {
         const fn = Fn.make(new TestFn(), {
             caching: true
         });
@@ -117,15 +117,12 @@ describe(`Function Caching`, () => {
         const f2 = (num: number) => num + 1;
 
         const fn1 = fn.map(f);
-        const fn2 = fn.map(f2); // overrides fn1 because f and f2 toString result in same value
-        const fn3 = fn.map(f);
-        const fn4 = fn.map(f2);
+        const fn2 = fn.map(f2);
 
-        expect(fn1).to.not.equal(fn3);
-        expect(fn2).to.not.equal(fn4);
+        expect(fn1).to.equal(fn2);
     });
 
-    it(`Functions that take objects are not equal with inline objects`, () => {
+    it(`Functions that take objects are equal with inline objects`, () => {
         const fn = Fn.make(new TestFn(), {
             caching: true
         });
@@ -138,7 +135,7 @@ describe(`Function Caching`, () => {
             value: "Value"
         });
 
-        expect(fn1).to.not.equal(fn2);
+        expect(fn1).to.equal(fn2);
     });
 
     it(`Functions that take objects are equal with constant object`, () => {
@@ -156,29 +153,7 @@ describe(`Function Caching`, () => {
         expect(fn1).to.equal(fn2);
     });
 
-    it(`Functions that take objects override each other in cache`, () => {
-        const fn = Fn.make(new TestFn(), {
-            caching: true
-        });
-
-        const obj1 = {
-            value: "Value"
-        };
-
-        const obj2 = {
-            value: "Value 2"
-        };
-
-        const fn1 = fn.context(obj1);
-        const fn2 = fn.context(obj2);
-        const fn3 = fn.context(obj1);
-        const fn4 = fn.context(obj2);
-
-        expect(fn1).to.not.equal(fn3);
-        expect(fn2).to.not.equal(fn4);
-    });
-
-    it(`Functions that override fnCacheString don't override each other`, () => {
+    it(`Functions with same implementation that override fnCacheString aren't equal to each other`, () => {
         const fn = Fn.make(new TestFn(), {
             caching: true
         });
@@ -192,14 +167,11 @@ describe(`Function Caching`, () => {
 
         const fn1 = fn.map(f);
         const fn2 = fn.map(f2); // won't override fn1 because they have different cache keys
-        const fn3 = fn.map(f);
-        const fn4 = fn.map(f2);
 
-        expect(fn1).to.equal(fn3);
-        expect(fn2).to.equal(fn4);
+        expect(fn1).to.not.equal(fn2);
     });
 
-    it(`Objects that override fnCacheString don't override each other`, () => {
+    it(`Functions that take objects that override fnCacheString aren't equal to each other`, () => {
         const fn = Fn.make(new TestFn(), {
             caching: true
         });
@@ -218,10 +190,7 @@ describe(`Function Caching`, () => {
 
         const fn1 = fn.context(obj1);
         const fn2 = fn.context(obj2);
-        const fn3 = fn.context(obj1);
-        const fn4 = fn.context(obj2);
 
-        expect(fn1).to.equal(fn3);
-        expect(fn2).to.equal(fn4);
+        expect(fn1).to.not.equal(fn2);
     });
 });
