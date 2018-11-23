@@ -7,15 +7,25 @@ const defaultContextOptions: FnContextOptions = {
     caching: false,
 };
 
-export const make = <T extends object = DynamicFn>(
-    obj?: T,
-    options?: FnContextOptions
+export const make = <T extends DynamicFn = DynamicFn> (
+    options?: FnContextOptions,
+): Fn<T> => {
+    let finalOptions =  Object.assign(defaultContextOptions, options || {});
+    return makeFnProxy(new DynamicFn(), finalOptions) as Fn<T>;
+};
+
+export const from = <T extends object = DynamicFn>(
+    obj: T,
+    options?: FnContextOptions,
 ): Fn<T> => {
     let contextObject: T | DynamicFn = obj;
+    let contextOptions = options;
+
     if (!contextObject) {
         contextObject = new DynamicFn();
     }
-    let finalOptions =  Object.assign(defaultContextOptions, options || {});
+
+    let finalOptions =  Object.assign(defaultContextOptions, contextOptions || {});
     return makeFnProxy(contextObject as T, finalOptions);
 };
 
