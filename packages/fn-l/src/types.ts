@@ -113,7 +113,7 @@ export class FnContext<T> {
         // create a new fn object
         const func = (() => {}) as unknown as FnContextWrapper<T>;
         func.context = new FnContext<T>(
-            root.contextObject,
+            cacheKey.name,
             parentContext,
             key,
             args
@@ -142,10 +142,16 @@ export class FnContext<T> {
             argSets.push(args);
         }
 
-        if (key === null && parentContext._keyedRoot) {
-            key = parentContext._keyedRoot._key;
+        // get key/name of function
+        let rootKey = key;
+        if (!rootKey) {
+            // no key for this context
+            // use the parent context's keyed root
+            // which can be itself
+            rootKey = parentContext._keyedRoot._key;
 
-            // get remaining args
+            // walk up the hierarchy until the keyed root
+            // getting remaining arg sets
             let next = parentContext;
             while (next !== parentContext._keyedRoot && next !== rootContext) {
                 if (next._args) {
@@ -155,21 +161,40 @@ export class FnContext<T> {
             }
         }
 
+        // Format arg sets into comma separated lists wrapped in parenthesis
+        const useArgValues = rootContext._options.useArgValuesInName;
         let argStr = argSets
             .reverse() // because we started at end
             .map(set =>
-                `(${set.map(arg => `${arg}`).join(",")})`
+                `(${set.map(arg => useArgValues ? `${arg}` : typeof arg)
+                    .join(",")})`
             );
 
-        name = `${key.toString()}${argStr.join("")}`;
+        name = `${rootKey.toString()}${argStr.join("")}`;
 
-        if (parentContext._keyedRoot) {
-            // start past already used contexts
-            const wrappedContext = parentContext._keyedRoot._parent;
+        if (parentContext !== rootContext) {
+
+            // Get context that is passed into this context
+            // when called as a function
+
+            // start with parent
+            let wrappedContext = parentContext;
+            if (!key) {
+                // if we don't have a key
+                // we have already handled all contexts up to the keyed root
+                // so wrapped context will be the keyed root's parent
+                wrappedContext = parentContext._keyedRoot._parent;
+            }
 
             if (wrappedContext !== rootContext) {
-                name = `${name}(${wrappedContext.name})`;
+                name = `${name}(${wrappedContext._name})`;
+            } else {
+                // No wrapped context, this is top of hierarchy
+                name += "(__input__)";
             }
+        } else {
+            // No wrapped context, this is top of hierarchy
+            name += "(__input__)";
         }
 
         return {
@@ -179,12 +204,18 @@ export class FnContext<T> {
     }
 
     private constructor(
-        obj: T,
+        obj: T | string,
         parent: FnContext<T> | FnContextOptions,
         key: keyof T = null,
         args: any[] = [],
     ) {
-        this._contextObject = obj;
+        // Set object if root
+        // name otherwise
+        if (typeof obj === "string") {
+            this._name = obj;
+        } else {
+            this._contextObject = obj;
+        }
 
         if (parent instanceof FnContext) {
             this._parent = parent;
@@ -207,14 +238,14 @@ export class FnContext<T> {
         } else {
             this._root = this._parent._root;
 
-            if (this._key == null) {
+            if (!this._key) {
                 this._keyedRoot = this._parent._keyedRoot;
             } else {
                 this._keyedRoot = this;
             }
 
             // root doesn't need a name
-            this._name = this.compileName();
+            // this._name = this.compileName();
 
             let compiledFunctions = this.compileFunctions();
 
@@ -228,55 +259,11 @@ export class FnContext<T> {
     }
 
     get contextObject() {
-        return this._contextObject;
+        return this._root._contextObject;
     }
 
     get func(): GenericFunction {
         return this._func;
-    }
-
-    private compileName(): string {
-        let name;
-
-        let key = this._key;
-
-        let argSets = [];
-
-        if (key === null) {
-            key = this._keyedRoot._key;
-
-            // get remaining args
-            let next = this as FnContext<T>;
-            while (next !== this._keyedRoot && next !== this._root) {
-                if (next._args) {
-                    argSets.push(next._args);
-                }
-                next = next._parent;
-            }
-        }
-
-        const useArgValuesInName = this._root._options.useArgValuesInName;
-        let argStr = argSets
-            .reverse() // because we started at end
-            .map(set =>
-                `(${set.map(arg => useArgValuesInName ? arg : (typeof arg))
-                    .join(",")})`
-            );
-
-        name = `${key.toString()}${argStr.join("")}`;
-
-        // start past already used contexts
-        const wrappedContext = this._keyedRoot._parent;
-
-        if (wrappedContext !== this._root) {
-            name = `${name}(${wrappedContext.name})`;
-        }
-
-        if (this._keyedRoot._parent === this._root) {
-            name += "(__input__)";
-        }
-
-        return name;
     }
 
     private compileFunctions() {
@@ -306,7 +293,7 @@ export class FnContext<T> {
             // This context is being created by direct access to context object with key
 
             // get function from context object with key
-            rawFunc = this._contextObject[this._key] as unknown as GenericFunction;
+            rawFunc = this._root._contextObject[this._key] as unknown as GenericFunction;
 
             if (this._parent === this._root) {
                 // is starting context
