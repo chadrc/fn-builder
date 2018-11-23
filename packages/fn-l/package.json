@@ -22,7 +22,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "jest"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
