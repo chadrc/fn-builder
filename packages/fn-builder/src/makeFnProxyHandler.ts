@@ -2,6 +2,10 @@ import {Fn, FnContext, FnContextOptions, FnContextWrapper} from "./types";
 
 export const InternalsKey = "__FnInternals__";
 
+const passThroughProps = [
+    "valueOf",
+];
+
 export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWrapper<T>> => {
     return {
         set: () => {throw new Error("Cannot set values on Fn object.")},
@@ -9,6 +13,11 @@ export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWr
         get: function (thisArg: FnContextWrapper<T>, prop: keyof T) {
             if (prop === InternalsKey) {
                 return thisArg.context;
+            }
+
+            // Pass through properties
+            if (passThroughProps.indexOf(prop as string) !== -1) {
+                return (thisArg as any)[prop];
             }
 
             // If requested prop is on the underlying object

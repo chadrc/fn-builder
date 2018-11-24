@@ -69,4 +69,18 @@ describe(`Naming of functions`, () => {
 
         expect(mulIncAddName).to.equal("add(3)(inc(mul(4)(__input__)))");
     });
+
+    it(`Name of function with another composed function contains its name`, () => {
+        const fn = Fn.from(new TestFn());
+
+        const add5_mul3 = fn.add(5).mul(3);
+
+        const valuesInRange_map = fn.valuesInRange(10, 20).map(add5_mul3);
+
+        const name = Fn.nameOf(valuesInRange_map);
+
+        const expectedName = "map(mul(number)(add(number)(__input__)))(valuesInRange(number,number)(__input__))";
+
+        expect(name).to.equal(expectedName);
+    });
 });

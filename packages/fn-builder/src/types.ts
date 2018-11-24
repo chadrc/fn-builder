@@ -1,4 +1,4 @@
-import {makeFnProxyHandler} from "./makeFnProxyHandler";
+import {InternalsKey, makeFnProxyHandler} from "./makeFnProxyHandler";
 
 interface CacheKey {
     key: string,
@@ -141,9 +141,9 @@ export class FnContext<T> {
         }
 
         // Function to convert an arg value to a key that will help make each entry unique
-        const getCacheKey = (arg: Cacheable | any) => {
+        const getArgKey = (arg: Cacheable | any, internalKey: "_cacheKey" | "_name") => {
             // Start with letting JavaScript toString value
-            let key = `${arg}`;
+            let key = null;
             if (arg && arg.fnCacheString) {
                 // If cacheable get custom cache key
                 // can be a function or string literal
@@ -152,9 +152,20 @@ export class FnContext<T> {
                 } else {
                     key = arg.fnCacheString;
                 }
+            } else if (arg[InternalsKey]) {
+                let argInternal = arg[InternalsKey] as FnContext<T>;
+                key = argInternal[internalKey];
             }
 
             return key;
+        };
+
+        const getCacheKey = (arg: Cacheable | any) => {
+            return getArgKey(arg, "_cacheKey") || `${arg}`;
+        };
+
+        const getNameKey = (arg: Cacheable | any) => {
+            return getArgKey(arg, "_name") || (typeof arg);
         };
 
         // Format arg sets into comma separated lists wrapped in parenthesis
@@ -172,7 +183,7 @@ export class FnContext<T> {
             let noArgValueStr = argSets
                 .reverse() // because we started at end
                 .map(set =>
-                    `(${set.map(arg => typeof arg)
+                    `(${set.map(getNameKey)
                         .join(",")})`
                 );
 
@@ -238,7 +249,7 @@ export class FnContext<T> {
 
         this._cacheKey = cacheKey;
         this._key = key;
-        this._args = args;
+        this._args = args || [];
 
         // Need some info for naming
         // and need name for caching
