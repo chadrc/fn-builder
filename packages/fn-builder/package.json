@@ -22,7 +22,8 @@
     "lib"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",

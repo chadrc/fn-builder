@@ -4,3 +4,6 @@
 dist
 node_modules
 *.log
+
+packages/**/*.js
+packages/**/*.d.ts
