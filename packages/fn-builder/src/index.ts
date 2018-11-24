@@ -10,7 +10,7 @@ const defaultContextOptions: FnContextOptions = {
 export const make = <T extends DynamicFn = DynamicFn> (
     options?: FnContextOptions,
 ): Fn<T> => {
-    let finalOptions =  Object.assign(defaultContextOptions, options || {});
+    let finalOptions =  Object.assign({}, defaultContextOptions, options || {});
     return makeFnProxy(new DynamicFn(), finalOptions) as Fn<T>;
 };
 
