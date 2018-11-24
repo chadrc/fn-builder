@@ -1,7 +1,7 @@
 import * as FnBuilder from "fn-builder";
-import chunk = require("lodash/chunk");
+import chunk from "./functions/chunk";
 
-FnBuilder.addDynamic("chunk", (size: number) => (ary: any[]) => chunk(ary, size));
+FnBuilder.addDynamic("chunk", chunk);
 
 declare module "fn-builder/DynamicFn" {
     interface DynamicFn {
