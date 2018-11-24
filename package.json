@@ -4,7 +4,9 @@
   "description": "Function composition library.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "lerna run test",
+    "build": "lerna run build",
+    "clean": "rm -rf packages/*/*.js packages/*/*.js.map packages/*/*.d.ts"
   },
   "author": "Chad R Collins",
   "license": "MIT",
