@@ -1,6 +1,6 @@
 {
   "name": "fn-builder",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Function composition library.",
   "author": "chadcollins <chadrcollins91@gmail.com>",
   "homepage": "",
