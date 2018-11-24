@@ -25,7 +25,7 @@ export const from = <T extends object = DynamicFn>(
         contextObject = new DynamicFn();
     }
 
-    let finalOptions =  Object.assign(defaultContextOptions, contextOptions || {});
+    let finalOptions =  Object.assign({}, defaultContextOptions, contextOptions || {});
     return makeFnProxy(contextObject as T, finalOptions);
 };
 
