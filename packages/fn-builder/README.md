@@ -1,11 +1,11 @@
-# `fn-l`
+# `fn-builder`
 
 > TODO: description
 
 ## Usage
 
 ```
-const fnL = require('fn-l');
+const FnBuilder = require('fn-builder');
 
 // TODO: DEMONSTRATE API
 ```
