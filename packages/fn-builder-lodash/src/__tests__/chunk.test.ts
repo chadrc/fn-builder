@@ -4,6 +4,7 @@ import * as FnBuilder from "fn-builder";
 import "../chunk";
 import chunkFunction from "../functions/chunk";
 import {Fn} from "fn-builder/types";
+import LodashFn from "../LodashFn";
 
 const testWithFn = (fn: Fn<any>) => () => {
     const chunk = fn.chunk(2);
@@ -23,5 +24,9 @@ describe(`chunk`, () => {
 
     it(`can be imported dynamically`, testWithFn(
         FnBuilder.make()
+    ));
+
+    it(`can be used with LodashFn`, testWithFn(
+        FnBuilder.from(new LodashFn())
     ));
 });

@@ -4,6 +4,7 @@ import * as FnBuilder from "fn-builder";
 import {Fn} from "fn-builder/types";
 import "../compact";
 import compactFunction from "../functions/compact";
+import LodashFn from "../LodashFn";
 
 const testWithFn = (fn: Fn<any>) => () => {
     const compact = fn.compact;
@@ -23,5 +24,9 @@ describe(`compact`, () => {
 
     it(`can be imported dynamically`, testWithFn(
         FnBuilder.make()
+    ));
+
+    it(`can be used with LodashFn`, testWithFn(
+        FnBuilder.from(new LodashFn())
     ));
 });
