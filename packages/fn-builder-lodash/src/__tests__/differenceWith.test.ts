@@ -3,15 +3,14 @@ import 'jest';
 import * as FnBuilder from "fn-builder";
 import differenceWith from "../differenceWith";
 import LodashFn from "../LodashFn";
+import * as _ from "lodash";
 
 const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const differenceWith = fn.differenceWith();
+    const differenceWith = fn.differenceWith([{ 'x': 1, 'y': 2 }], _.isEqual);
 
-    const input = ['a', 'b', 'c', 'd'];
-    const output = differenceWith(input);
+    const output = differenceWith([{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }]);
 
-    // expect(output).to.deep.equal([['a', 'b'], ['c', 'd']]);
-    throw new Error("Unimplemented");
+    expect(output).to.deep.equal([{ 'x': 2, 'y': 1 }]);
 };
 
 describe("differenceWith", () => {
