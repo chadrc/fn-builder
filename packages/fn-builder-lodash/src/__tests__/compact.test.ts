@@ -1,12 +1,11 @@
 import {expect} from 'chai';
 import 'jest';
 import * as FnBuilder from "fn-builder";
-import {Fn} from "fn-builder/types";
 import "../compact";
 import compactFunction from "../functions/compact";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
     const compact = fn.compact;
 
     const input = [0, 1, false, 2, '', 3];

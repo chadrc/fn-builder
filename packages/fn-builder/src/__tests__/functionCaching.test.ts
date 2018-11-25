@@ -1,4 +1,4 @@
-import * as Fn from "../index";
+import * as FnBuilder from "../index";
 import {expect} from 'chai';
 import 'jest';
 import {TestFn} from "./TestFn";
@@ -6,7 +6,7 @@ import {Cacheable} from "../types";
 
 describe(`Function Caching`, () => {
     it(`Function caching is off by default`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const fn1 = fn.sum;
         const fn2 = fn.sum;
@@ -15,7 +15,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions references of same methods with no arguments are equal`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -26,7 +26,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take the same arguments are equal`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -37,7 +37,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take different arguments are not equal`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -48,7 +48,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take different arguments don't override each other in cache`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -62,7 +62,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions chained the same way are equal`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -73,7 +73,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions chained with different arguments aren't equal`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -84,7 +84,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take a inline functions with same implementations are equal`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -95,7 +95,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take a constant function are equal`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -108,7 +108,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions with same implementation are equal`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -123,7 +123,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take objects are equal with inline objects`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -139,7 +139,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take objects are equal with constant object`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -154,7 +154,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions with same implementation that override fnCacheString aren't equal to each other`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -172,7 +172,7 @@ describe(`Function Caching`, () => {
     });
 
     it(`Functions that take objects that override fnCacheString aren't equal to each other`, () => {
-        const fn = Fn.from(new TestFn(), {
+        const fn = FnBuilder.from(new TestFn(), {
             caching: true
         });
 

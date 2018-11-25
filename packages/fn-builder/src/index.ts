@@ -7,6 +7,8 @@ const defaultContextOptions: FnContextOptions = {
     caching: false,
 };
 
+export {Fn} from "./types";
+
 export const make = <T extends DynamicFn = DynamicFn> (
     options?: FnContextOptions,
 ): Fn<T> => {

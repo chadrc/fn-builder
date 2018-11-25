@@ -1,12 +1,11 @@
 import {expect} from 'chai';
 import 'jest';
 import * as FnBuilder from "fn-builder";
-import {Fn} from "fn-builder/types";
 import "../concat";
 import concatFunction from "../functions/concat";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
     const concat = fn.concat(2, [3], [[4]]);
 
     const input = [1];

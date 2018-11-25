@@ -1,21 +1,21 @@
-import * as Fn from "../index";
+import * as FnBuilder from "../index";
 import {expect} from 'chai';
 import 'jest';
 import {TestFn} from "./TestFn";
 
 describe(`Interface tests`, () => {
     it(`Can create Fn instance`, () => {
-        Fn.from({});
+        FnBuilder.from({});
     });
 
     it(`Can create Fn with object`, () => {
-        Fn.from({
+        FnBuilder.from({
             add: (num: number) => (value: number) => value + num
         });
     });
 
     it(`Can create function from existing function`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const add5 = fn.add(5);
 
@@ -23,7 +23,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can chain two function creations`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const mul6_add2 = fn.mul(6).add(2);
 
@@ -31,7 +31,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can use pre-composed function`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const add3 = fn.add3;
 
@@ -39,7 +39,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can chain two composed functions`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const add3_mul2 = fn.add3.mul2;
 
@@ -47,7 +47,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can chain composed functions with inline composed functions`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const mul2_add10 = fn.mul2.add(10);
 
@@ -55,7 +55,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can pass multiple arguments to compose a function`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const avgOfValuesInRange = fn.valuesInRange(5, 12).avg;
 
@@ -65,7 +65,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can pass multiple arguments to composed function`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const addValuesMul2 = fn.addValues.mul2.add(4);
 
@@ -73,7 +73,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can chain calls to one function`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const div10_2decimals = fn.precisionDiv(2)(8).mul(3);
 
@@ -84,7 +84,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Cannot set any value on Fn object`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const func = () => {
             fn.add = (() => {}) as any;
@@ -94,7 +94,7 @@ describe(`Interface tests`, () => {
     });
 
     it(`Cannot delete any value on Fn object`, () => {
-        const fn = Fn.from(new TestFn());
+        const fn = FnBuilder.from(new TestFn());
 
         const func = () => {
             delete fn.add;

@@ -39,7 +39,7 @@
     "testRegex": "src/__tests__/.*\\.test\\.(ts|tsx|js)$"
   },
   "dependencies": {
-    "fn-builder": "0.0.4",
+    "fn-builder": "0.0.5",
     "lodash": "^4.17.11"
   }
 }
