@@ -4,111 +4,111 @@ import 'jest';
 import {TestFn} from "./TestFn";
 import {Cacheable} from "../types";
 
-describe(`Function Caching`, () => {
-    it(`Function caching is off by default`, () => {
-        const fn = FnBuilder.from(new TestFn());
+describe(`Caching`, () => {
+    it(`Context caching is off by default`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn());
 
-        const fn1 = fn.sum;
-        const fn2 = fn.sum;
-
-        expect(fn1).to.not.equal(fn2);
-    });
-
-    it(`Functions references of same methods with no arguments are equal`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
-            caching: true
-        });
-
-        const fn1 = fn.sum;
-        const fn2 = fn.sum;
-
-        expect(fn1).to.equal(fn2);
-    });
-
-    it(`Functions that take the same arguments are equal`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
-            caching: true
-        });
-
-        const fn1 = fn.add(3);
-        const fn2 = fn.add(3);
-
-        expect(fn1).to.equal(fn2);
-    });
-
-    it(`Functions that take different arguments are not equal`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
-            caching: true
-        });
-
-        const fn1 = fn.add(3);
-        const fn2 = fn.add(2);
+        const fn1 = fnBuilder.sum;
+        const fn2 = fnBuilder.sum;
 
         expect(fn1).to.not.equal(fn2);
     });
 
-    it(`Functions that take different arguments don't override each other in cache`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts references of same methods with no arguments are equal`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
-        const fn1 = fn.add(3);
-        const fn2 = fn.add(2);
-        const fn3 = fn.add(3);
+        const fn1 = fnBuilder.sum;
+        const fn2 = fnBuilder.sum;
+
+        expect(fn1).to.equal(fn2);
+    });
+
+    it(`Contexts that take the same arguments are equal`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
+            caching: true
+        });
+
+        const fn1 = fnBuilder.add(3);
+        const fn2 = fnBuilder.add(3);
+
+        expect(fn1).to.equal(fn2);
+    });
+
+    it(`Contexts that take different arguments are not equal`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
+            caching: true
+        });
+
+        const fn1 = fnBuilder.add(3);
+        const fn2 = fnBuilder.add(2);
+
+        expect(fn1).to.not.equal(fn2);
+    });
+
+    it(`Contexts that take different arguments don't override each other in cache`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
+            caching: true
+        });
+
+        const fn1 = fnBuilder.add(3);
+        const fn2 = fnBuilder.add(2);
+        const fn3 = fnBuilder.add(3);
 
         expect(fn1).to.not.equal(fn2);
         expect(fn1).to.equal(fn3);
         expect(fn2).to.not.equal(fn3);
     });
 
-    it(`Functions chained the same way are equal`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts chained the same way are equal`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
-        const fn1 = fn.valuesInRange(4,12).sum.mul(3).add3;
-        const fn2 = fn.valuesInRange(4,12).sum.mul(3).add3;
+        const fn1 = fnBuilder.valuesInRange(4,12).sum.mul(3).add3;
+        const fn2 = fnBuilder.valuesInRange(4,12).sum.mul(3).add3;
 
         expect(fn1).to.equal(fn2);
     });
 
-    it(`Functions chained with different arguments aren't equal`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts chained with different arguments aren't equal`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
-        const fn1 = fn.valuesInRange(4,12).sum.mul(3).add3;
-        const fn2 = fn.valuesInRange(4,12).sum.mul(5).add3;
+        const fn1 = fnBuilder.valuesInRange(4,12).sum.mul(3).add3;
+        const fn2 = fnBuilder.valuesInRange(4,12).sum.mul(5).add3;
 
         expect(fn1).to.not.equal(fn2);
     });
 
-    it(`Functions that take a inline functions with same implementations are equal`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts that take a inline functions with same implementations are equal`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
-        const fn1 = fn.map((num) => num + 1);
-        const fn2 = fn.map((num) => num + 1);
+        const fn1 = fnBuilder.map((num) => num + 1);
+        const fn2 = fnBuilder.map((num) => num + 1);
 
         expect(fn1).to.equal(fn2);
     });
 
-    it(`Functions that take a constant function are equal`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts that take a constant function are equal`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
         const f = (num: number) => num + 1;
 
-        const fn1 = fn.map(f);
-        const fn2 = fn.map(f);
+        const fn1 = fnBuilder.map(f);
+        const fn2 = fnBuilder.map(f);
 
         expect(fn1).to.equal(fn2);
     });
 
-    it(`Functions with same implementation are equal`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts with same implementation are equal`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -116,30 +116,30 @@ describe(`Function Caching`, () => {
         const f = (num: number) => num + 1;
         const f2 = (num: number) => num + 1;
 
-        const fn1 = fn.map(f);
-        const fn2 = fn.map(f2);
+        const fn1 = fnBuilder.map(f);
+        const fn2 = fnBuilder.map(f2);
 
         expect(fn1).to.equal(fn2);
     });
 
-    it(`Functions that take objects are equal with inline objects`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts that take objects are equal with inline objects`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
-        const fn1 = fn.context({
+        const fn1 = fnBuilder.context({
             value: "Value"
         });
 
-        const fn2 = fn.context({
+        const fn2 = fnBuilder.context({
             value: "Value"
         });
 
         expect(fn1).to.equal(fn2);
     });
 
-    it(`Functions that take objects are equal with constant object`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts that take objects are equal with constant object`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -147,14 +147,14 @@ describe(`Function Caching`, () => {
             value: "Value"
         };
 
-        const fn1 = fn.context(obj);
-        const fn2 = fn.context(obj);
+        const fn1 = fnBuilder.context(obj);
+        const fn2 = fnBuilder.context(obj);
 
         expect(fn1).to.equal(fn2);
     });
 
-    it(`Functions with same implementation that override fnCacheString aren't equal to each other`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts with same implementation that override fnCacheString aren't equal to each other`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -165,14 +165,14 @@ describe(`Function Caching`, () => {
         const f2 = (num: number) => num + 1;
         (f as unknown as Cacheable).fnCacheString = "func2";
 
-        const fn1 = fn.map(f);
-        const fn2 = fn.map(f2); // won't override fn1 because they have different cache keys
+        const fn1 = fnBuilder.map(f);
+        const fn2 = fnBuilder.map(f2); // won't override fn1 because they have different cache keys
 
         expect(fn1).to.not.equal(fn2);
     });
 
-    it(`Functions that take objects that override fnCacheString aren't equal to each other`, () => {
-        const fn = FnBuilder.from(new TestFn(), {
+    it(`Contexts that take objects that override fnCacheString aren't equal to each other`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
         });
 
@@ -188,8 +188,8 @@ describe(`Function Caching`, () => {
             fnCacheString: () => "obj2"
         };
 
-        const fn1 = fn.context(obj1);
-        const fn2 = fn.context(obj2);
+        const fn1 = fnBuilder.context(obj1);
+        const fn2 = fnBuilder.context(obj2);
 
         expect(fn1).to.not.equal(fn2);
     });
