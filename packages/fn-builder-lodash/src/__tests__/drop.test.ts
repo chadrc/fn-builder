@@ -6,12 +6,16 @@ import LodashFn from "../LodashFn";
 
 const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
     const drop = fn.drop();
+    expect(drop([1, 2, 3])).to.deep.equal([2, 3]);
 
-    const input = ['a', 'b', 'c', 'd'];
-    const output = drop(input);
+    const drop2 = fn.drop(2);
+    expect(drop2([1, 2, 3])).to.deep.equal([3]);
 
-    // expect(output).to.deep.equal([['a', 'b'], ['c', 'd']]);
-    throw new Error("Unimplemented");
+    const drop3 = fn.drop(5);
+    expect(drop3([1, 2, 3])).to.deep.equal([]);
+
+    const drop4 = fn.drop(0);
+    expect(drop4([1, 2, 3])).to.deep.equal([1, 2, 3]);
 };
 
 describe("drop", () => {
