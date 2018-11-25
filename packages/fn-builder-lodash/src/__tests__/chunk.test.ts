@@ -4,8 +4,8 @@ import * as FnBuilder from "fn-builder";
 import "../chunk";
 import chunkFunction from "../functions/chunk";
 
-describe(`lodash to fn-builder`, () => {
-    it(`chunk can be included in custom Fn object`, () => {
+describe(`chunk`, () => {
+    it(`can be included in custom Fn object`, () => {
         const fn = FnBuilder.from({
             chunk: chunkFunction
         });
@@ -18,7 +18,7 @@ describe(`lodash to fn-builder`, () => {
         expect(output).to.deep.equal([['a', 'b'], ['c', 'd']]);
     });
 
-    it(`chunk can be imported dynamically`, () => {
+    it(`can be imported dynamically`, () => {
         const fn = FnBuilder.make();
 
         const chunk = fn.chunk(2);
