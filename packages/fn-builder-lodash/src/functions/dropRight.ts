@@ -1,7 +1,7 @@
 import dropRight = require("lodash/dropRight");
 
 export interface FunctionType {
-    
+    (amount: number): (ary: any[]) => any[]
 }
 
-export default () => {throw new Error("Unimplemented");};
+export default (amount: number) => (ary: any[]) => dropRight(ary, amount);
