@@ -1,8 +1,7 @@
 import {expect} from 'chai';
 import 'jest';
 import * as FnBuilder from "fn-builder";
-import "../chunk";
-import chunkFunction from "../functions/chunk";
+import chunk from "../chunk";
 import LodashFn from "../LodashFn";
 
 const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
@@ -17,7 +16,7 @@ const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
 describe(`chunk`, () => {
     it(`can be included in custom Fn object`, testWithFn(
         FnBuilder.from({
-            chunk: chunkFunction
+            chunk: chunk
         })
     ));
 

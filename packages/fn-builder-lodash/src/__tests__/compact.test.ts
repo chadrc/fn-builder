@@ -1,8 +1,7 @@
 import {expect} from 'chai';
 import 'jest';
 import * as FnBuilder from "fn-builder";
-import "../compact";
-import compactFunction from "../functions/compact";
+import compact from "../compact";
 import LodashFn from "../LodashFn";
 
 const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
@@ -17,7 +16,7 @@ const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
 describe(`compact`, () => {
     it(`can be included in custom Fn object`, testWithFn(
         FnBuilder.from({
-            compact: compactFunction
+            compact: compact
         })
     ));
 

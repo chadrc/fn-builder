@@ -1,8 +1,7 @@
 import {expect} from 'chai';
 import 'jest';
 import * as FnBuilder from "fn-builder";
-import "../concat";
-import concatFunction from "../functions/concat";
+import concat from "../concat";
 import LodashFn from "../LodashFn";
 
 const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
@@ -17,7 +16,7 @@ const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
 describe(`concat`, () => {
     it(`can be included in custom Fn object`, testWithFn(
         FnBuilder.from({
-            concat: concatFunction
+            concat: concat
         })
     ));
 
