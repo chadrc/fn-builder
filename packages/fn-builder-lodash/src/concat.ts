@@ -1,11 +1,11 @@
 import * as FnBuilder from "fn-builder";
-import concat from "./functions/concat";
+import concat, {FunctionType} from "./functions/concat";
 
 FnBuilder.addDynamic("concat", concat);
 
 declare module "fn-builder/DynamicFn" {
     interface DynamicFn {
-        concat(ary: any[]): any[]
+        concat: FunctionType
     }
 }
 
