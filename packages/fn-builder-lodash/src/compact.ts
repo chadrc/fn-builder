@@ -8,3 +8,5 @@ declare module "fn-builder/DynamicFn" {
         compact(ary: any[]): any[]
     }
 }
+
+export default compact;

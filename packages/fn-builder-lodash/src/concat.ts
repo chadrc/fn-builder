@@ -8,3 +8,5 @@ declare module "fn-builder/DynamicFn" {
         concat(ary: any[]): any[]
     }
 }
+
+export default concat;

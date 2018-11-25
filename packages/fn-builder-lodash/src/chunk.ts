@@ -8,3 +8,5 @@ declare module "fn-builder/DynamicFn" {
         chunk(size: number): (ary: any[]) => any[]
     }
 }
+
+export default chunk;
