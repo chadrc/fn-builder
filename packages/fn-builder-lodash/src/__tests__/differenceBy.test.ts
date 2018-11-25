@@ -10,6 +10,12 @@ const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
     const output = differenceBy([2.1, 1.2]);
 
     expect(output).to.deep.equal([1.2]);
+
+    const differenceByProperty = fn.differenceBy([{ 'x': 1 }], 'x');
+
+    const propOutput = differenceByProperty([{ 'x': 2 }, { 'x': 1 }]);
+
+    expect(propOutput).to.deep.equal([{'x': 2}]);
 };
 
 describe("differenceBy", () => {
