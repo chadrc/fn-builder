@@ -5,13 +5,12 @@ import add from "../add";
 import LodashFn from "../LodashFn";
 
 const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const add = fn.add();
+    const add = fn.add(4);
 
-    const input = ['a', 'b', 'c', 'd'];
+    const input = 6;
     const output = add(input);
 
-    // expect(output).to.deep.equal([['a', 'b'], ['c', 'd']]);
-    throw new Error("Unimplemented");
+    expect(output).to.deep.equal(10);
 };
 
 describe("add", () => {
