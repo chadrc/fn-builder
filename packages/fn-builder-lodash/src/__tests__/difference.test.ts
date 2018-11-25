@@ -5,13 +5,11 @@ import difference from "../difference";
 import LodashFn from "../LodashFn";
 
 const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const difference = fn.difference();
+    const difference = fn.difference([2, 3], [4]);
 
-    const input = ['a', 'b', 'c', 'd'];
-    const output = difference(input);
+    const output = difference([2, 1, 4]);
 
-    // expect(output).to.deep.equal([['a', 'b'], ['c', 'd']]);
-    throw new Error("Unimplemented");
+    expect(output).to.deep.equal([1]);
 };
 
 describe("difference", () => {
