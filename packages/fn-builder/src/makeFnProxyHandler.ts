@@ -1,6 +1,8 @@
-import {Fn, FnContext, FnContextOptions, FnContextWrapper} from "./types";
+import {FnBuilder, FnContext, FnContextOptions, FnContextWrapper} from "./types";
 
 export const InternalsKey = "__FnInternals__";
+
+const FnPropertyKey = "fn";
 
 const passThroughProps = [
     "valueOf",
@@ -13,6 +15,10 @@ export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWr
         get: function (thisArg: FnContextWrapper<T>, prop: keyof T) {
             if (prop === InternalsKey) {
                 return thisArg.context;
+            }
+
+            if (prop === FnPropertyKey) {
+                return FnContext.build(thisArg.context);
             }
 
             // Pass through properties
@@ -31,32 +37,36 @@ export const makeFnProxyHandler = <T extends object>(): ProxyHandler<FnContextWr
             }
         },
         apply: function (target: FnContextWrapper<T>, thisArg: any, argumentsList: any) {
-            let result;
+            // let result;
 
-            try {
-                result = target.context.func(...argumentsList);
-            } catch (e) {
-                // TODO: try switching logic here, do compose first with chance of failure else return normal value
-                // chance that calling the function will be with incorrect args
-                // so we try to compose with the arguments instead
-                // if that fails, then something else is wrong
-                return makeFnProxy(
-                    target.context,
-                    null,
-                    argumentsList
-                );
-            }
+            // try {
+            //     result = target.context.func(...argumentsList);
+            // } catch (e) {
+            //     // TODO: try switching logic here, do compose first with chance of failure else return normal value
+            //     // chance that calling the function will be with incorrect args
+            //     // so we try to compose with the arguments instead
+            //     // if that fails, then something else is wrong
+            //     return makeFnProxy(
+            //         target.context,
+            //         null,
+            //         argumentsList
+            //     );
+            // }
 
             // if this function returned another function
             // wrap in proxy so it can be composed more
-            if (typeof result === "function") {
-                return makeFnProxy(
-                    target.context,
-                    null,
-                    argumentsList
-                );
-            }
-            return result;
+            // if (typeof result === "function") {
+            //     return makeFnProxy(
+            //         target.context,
+            //         null,
+            //         argumentsList
+            //     );
+            // }
+            return makeFnProxy(
+                target.context,
+                null,
+                argumentsList
+            );
         }
     }
 };
@@ -65,14 +75,14 @@ const makeFnProxy = <T extends object>(
     root: FnContext<T> = null,
     key: keyof T = null,
     args: any[] = [],
-): Fn<T> => {
+): FnBuilder<T> => {
     return FnContext.makeFnProxyObject(root, key, args);
 };
 
 const initFnProxy = <T extends object>(
     obj: T,
     options: FnContextOptions,
-): Fn<T> => {
+): FnBuilder<T> => {
     return FnContext.makeFnRoot(obj, options);
 };
 

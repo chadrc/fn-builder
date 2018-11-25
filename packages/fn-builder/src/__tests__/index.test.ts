@@ -15,49 +15,49 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can create function from existing function`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
-        const add5 = fn.add(5);
+        const add5 = fnBuilder.add(5).fn;
 
         expect(add5(2)).to.equal(7);
     });
 
     it(`Can chain two function creations`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
-        const mul6_add2 = fn.mul(6).add(2);
+        const mul6_add2 = fnBuilder.mul(6).add(2).fn;
 
         expect(mul6_add2(3)).to.equal(20);
     });
 
     it(`Can use pre-composed function`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
-        const add3 = fn.add3;
+        const add3 = fnBuilder.add3.fn;
 
         expect(add3(8)).to.equal(11);
     });
 
     it(`Can chain two composed functions`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
-        const add3_mul2 = fn.add3.mul2;
+        const add3_mul2 = fnBuilder.add3.mul2.fn;
 
         expect(add3_mul2(4)).to.equal(14);
     });
 
     it(`Can chain composed functions with inline composed functions`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
-        const mul2_add10 = fn.mul2.add(10);
+        const mul2_add10 = fnBuilder.mul2.add(10).fn;
 
         expect(mul2_add10(8)).to.equal(26);
     });
 
     it(`Can pass multiple arguments to compose a function`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
-        const avgOfValuesInRange = fn.valuesInRange(5, 12).avg;
+        const avgOfValuesInRange = fnBuilder.valuesInRange(5, 12).avg.fn;
 
         // 8 + 10 + 12 = 30
         // 30 / 3 = 10
@@ -65,17 +65,17 @@ describe(`Interface tests`, () => {
     });
 
     it(`Can pass multiple arguments to composed function`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
-        const addValuesMul2 = fn.addValues.mul2.add(4);
+        const addValuesMul2 = fnBuilder.addValues.mul2.add(4).fn;
 
         expect(addValuesMul2(3, 4)).to.equal(18);
     });
 
     it(`Can chain calls to one function`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
-        const div10_2decimals = fn.precisionDiv(2)(8).mul(3);
+        const div10_2decimals = fnBuilder.precisionDiv(2)(8).mul(3).fn;
 
         // 1 / 8 = .125
         // toFixed(.125) = .13
@@ -84,20 +84,20 @@ describe(`Interface tests`, () => {
     });
 
     it(`Cannot set any value on Fn object`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
         const func = () => {
-            fn.add = (() => {}) as any;
+            fnBuilder.add = (() => {}) as any;
         };
 
         expect(func).to.throw();
     });
 
     it(`Cannot delete any value on Fn object`, () => {
-        const fn = FnBuilder.from(new TestFn());
+        const fnBuilder = FnBuilder.from(new TestFn());
 
         const func = () => {
-            delete fn.add;
+            delete fnBuilder.add;
         };
 
         expect(func).to.throw();

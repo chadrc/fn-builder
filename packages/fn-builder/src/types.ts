@@ -7,7 +7,7 @@ interface CacheKey {
 
 interface CacheObject<T> {
     key: CacheKey;
-    fn: Fn<T>
+    fn: FnBuilder<T>
 }
 
 export type CacheableFunction = () => string;
@@ -25,12 +25,14 @@ export type GenericFunction = (...arg: any) => any
 
 export type FnPropertyFunction<T, F> = F extends (...arg: infer U) => any ?
     ReturnType<F> extends (...arg: any[]) => any ?
-        (...args: U) => Fn<T> & FnPropertyFunction<T, ReturnType<F>>// & GenericFunction<T>
+        (...args: U) => FnBuilder<T> & FnPropertyFunction<T, ReturnType<F>>// & GenericFunction<T>
         : (...args: any[]) => GenericFunction
     : F;
 
-export type Fn<T> = {
-    [P in keyof T]: Fn<T> & FnPropertyFunction<T, T[P]>;
+export type FnBuilder<T> = {
+    [P in keyof T]: FnBuilder<T> & FnPropertyFunction<T, T[P]>;
+} & {
+    fn: (...args: any) => any
 }
 
 export interface FnContextWrapper<T> {
@@ -46,10 +48,85 @@ export class FnContext<T> {
     private readonly _root: FnContext<T>;
     private readonly _args: any[];
     private readonly _keyedRoot: FnContext<T>;
-    private readonly _func: GenericFunction;
-    private readonly _rawFunc: GenericFunction;
+    // private readonly _func: GenericFunction;
+    // private readonly _rawFunc: GenericFunction;
     private readonly _name: string;
     private readonly _cacheKey: string;
+
+    static build = (context: FnContext<any>) => {
+        const root = context._root;
+        const obj = root._contextObject;
+
+        // A single compiled function consists of a keyed root
+        // and any subsequent contexts with args
+        // ex.
+        // func1(arg1).func2.func3(arg2)(arg3)
+        // would result in three compiled functions
+        // 1 - func1(arg1)
+        // 2 - func2
+        // 3 - func3(arg2)(arg3)
+
+        const compiledFunctions = [];
+
+        // we start at the end of the chain
+        // (arg3) from above example
+
+        let currentContext = context;
+
+        while (currentContext != root) {
+            // get keyed root
+            const keyedRoot = currentContext._keyedRoot;
+
+            // get raw function
+            let func = obj[keyedRoot._key];
+
+            // If we are not at the keyed root
+            // we need to call the keyed root function with args in subsequent contexts
+            if (keyedRoot !== currentContext)  {
+
+                // go up chain until keyed root
+                // collect all arg contexts for current function
+
+                let currArgContext = currentContext;
+
+                const argContexts = [];
+                while (currArgContext !== keyedRoot) {
+                    argContexts.push(currArgContext);
+                    currArgContext = currArgContext._parent;
+                }
+
+                // start with closest to keyed root using reversed list
+                // call function with arguments to get final version of function
+                for (const argContext of argContexts.reverse()) {
+                    func = func(...argContext._args);
+                }
+            }
+
+            // wrap func in a new function that will pass through args
+
+            compiledFunctions.push(func);
+
+            // Next context to make a function with is always the keyed root's parent
+            currentContext = keyedRoot._parent;
+        }
+
+        // Merge compiled functions into one function
+
+        // start with closest to root function
+        let ordered = compiledFunctions.slice().reverse();
+
+        let first = ordered.shift();
+
+        let finalFunction = (...input: any[]) => first(...input);
+        while (ordered.length > 0) {
+            // wrap each function passing down the arguments
+            const next = ordered.shift();
+            const prev = finalFunction;
+            finalFunction = (...input: any[]) => next(prev(...input));
+        }
+
+        return finalFunction;
+    };
 
     static makeFnRoot = <T extends object>(
         obj: T,
@@ -61,14 +138,14 @@ export class FnContext<T> {
 
         // Root context doesn't get cached
         // just create and return it
-        return new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
+        return new Proxy(func, makeFnProxyHandler()) as unknown as FnBuilder<T>;
     };
 
     static makeFnProxyObject = <T extends object>(
         parentContext: FnContext<T> = null,
         key: keyof T = null,
         args: any[] = [],
-    ): Fn<T> => {
+    ): FnBuilder<T> => {
 
         // Check root context's cache for existing object
         const root = parentContext._root;
@@ -97,7 +174,7 @@ export class FnContext<T> {
             args
         );
 
-        const fn = new Proxy(func, makeFnProxyHandler()) as unknown as Fn<T>;
+        const fn = new Proxy(func, makeFnProxyHandler()) as unknown as FnBuilder<T>;
 
         // put new fn object in cache
         root._contextCache[cacheKey.key] = {
@@ -266,14 +343,6 @@ export class FnContext<T> {
             } else {
                 this._keyedRoot = this;
             }
-
-            // root doesn't need a name
-            // this._name = this.compileName();
-
-            let compiledFunctions = this.compileFunctions();
-
-            this._func = compiledFunctions.func;
-            this._rawFunc = compiledFunctions.rawFunc;
         }
     }
 
@@ -283,51 +352,5 @@ export class FnContext<T> {
 
     get contextObject() {
         return this._root._contextObject;
-    }
-
-    get func(): GenericFunction {
-        return this._func;
-    }
-
-    private compileFunctions() {
-        let func: GenericFunction = null;
-        let rawFunc: GenericFunction = null;
-
-        if (this._key === null) {
-            // This context is being created by a function call
-            // not by property access
-
-            // get raw function parent function
-            rawFunc = this._parent._rawFunc;
-
-            // create new function by invoking parent function with given args
-            rawFunc = rawFunc(...this._args);
-
-            // Compose this function with closest keyed ancestor's parent
-            let keyedRootParent = this._keyedRoot._parent;
-            if (keyedRootParent !== this._root) {
-                func = (...input) => rawFunc(keyedRootParent._func(...input));
-            } else {
-                // is starting context
-                // use raw function
-                func = rawFunc;
-            }
-        } else {
-            // This context is being created by direct access to context object with key
-
-            // get function from context object with key
-            rawFunc = this._root._contextObject[this._key] as unknown as GenericFunction;
-
-            if (this._parent === this._root) {
-                // is starting context
-                // use raw function
-                func = rawFunc;
-            } else {
-                // compose it directly with its parent function
-                func = (...input) => rawFunc(this._parent._func(...input));
-            }
-        }
-
-        return {func, rawFunc};
     }
 }

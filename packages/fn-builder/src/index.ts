@@ -1,5 +1,5 @@
 import makeFnProxy, {InternalsKey} from "./makeFnProxyHandler";
-import {Fn, FnContext, FnContextOptions} from "./types";
+import {FnBuilder, FnContext, FnContextOptions} from "./types";
 import {DynamicFn} from "./DynamicFn";
 
 const defaultContextOptions: FnContextOptions = {
@@ -7,19 +7,19 @@ const defaultContextOptions: FnContextOptions = {
     caching: false,
 };
 
-export {Fn} from "./types";
+export {FnBuilder} from "./types";
 
 export const make = <T extends DynamicFn = DynamicFn> (
     options?: FnContextOptions,
-): Fn<T> => {
+): FnBuilder<T> => {
     let finalOptions =  Object.assign({}, defaultContextOptions, options || {});
-    return makeFnProxy(new DynamicFn(), finalOptions) as Fn<T>;
+    return makeFnProxy(new DynamicFn(), finalOptions) as FnBuilder<T>;
 };
 
 export const from = <T extends object = DynamicFn>(
     obj: T,
     options?: FnContextOptions,
-): Fn<T> => {
+): FnBuilder<T> => {
     let contextObject: T | DynamicFn = obj;
     let contextOptions = options;
 
@@ -31,7 +31,7 @@ export const from = <T extends object = DynamicFn>(
     return makeFnProxy(contextObject as T, finalOptions);
 };
 
-export const nameOf = (fn: Fn<any>) => {
+export const nameOf = (fn: FnBuilder<any>) => {
     const context = (fn as any)[InternalsKey] as FnContext<any>;
     return context.name;
 };
