@@ -4,11 +4,11 @@ import 'jest';
 import {TestFn} from "./TestFn";
 
 describe(`Interface tests`, () => {
-    it(`Can create Fn instance`, () => {
+    it(`Can create FnBuilder instance`, () => {
         FnBuilder.from({});
     });
 
-    it(`Can create Fn with object`, () => {
+    it(`Can create FnBuilder with object`, () => {
         FnBuilder.from({
             add: (num: number) => (value: number) => value + num
         });
