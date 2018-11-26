@@ -48,12 +48,19 @@ export class FnContext<T> {
     private readonly _root: FnContext<T>;
     private readonly _args: any[];
     private readonly _keyedRoot: FnContext<T>;
-    // private readonly _func: GenericFunction;
-    // private readonly _rawFunc: GenericFunction;
     private readonly _name: string;
     private readonly _cacheKey: string;
 
+    private _builtFunction: Function = null;
+
     static build = (context: FnContext<any>) => {
+        if (context._builtFunction) {
+            // resulting function is placed on context after first build
+            // should result in same function every time this function is called
+            // return if exists so references can be equal to each other
+            return context._builtFunction;
+        }
+
         const root = context._root;
         const obj = root._contextObject;
 
@@ -125,6 +132,8 @@ export class FnContext<T> {
             finalFunction = (...input: any[]) => next(prev(...input));
         }
 
+        // cache function
+        context._builtFunction = finalFunction;
         return finalFunction;
     };
 

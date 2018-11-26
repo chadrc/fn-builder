@@ -25,6 +25,17 @@ describe(`Caching`, () => {
         expect(fn1).to.equal(fn2);
     });
 
+    it(`Function references of same context are equal`, () => {
+        const fnBuilder = FnBuilder.from(new TestFn(), {
+            caching: true
+        });
+
+        const fn1 = fnBuilder.sum.fn;
+        const fn2 = fnBuilder.sum.fn;
+
+        expect(fn1).to.equal(fn2);
+    });
+
     it(`Contexts that take the same arguments are equal`, () => {
         const fnBuilder = FnBuilder.from(new TestFn(), {
             caching: true
