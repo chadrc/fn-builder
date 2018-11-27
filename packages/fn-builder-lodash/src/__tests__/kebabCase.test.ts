@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import kebabCase from "../kebabCase";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const kebabCase = fn.kebabCase();
 
     const input = ['a', 'b', 'c', 'd'];

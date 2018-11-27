@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import matches from "../matches";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const matches = fn.matches();
 
     const input = ['a', 'b', 'c', 'd'];

@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import flatMapDepth from "../flatMapDepth";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const flatMapDepth = fn.flatMapDepth();
 
     const input = ['a', 'b', 'c', 'd'];

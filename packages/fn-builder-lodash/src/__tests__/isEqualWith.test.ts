@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import isEqualWith from "../isEqualWith";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const isEqualWith = fn.isEqualWith();
 
     const input = ['a', 'b', 'c', 'd'];

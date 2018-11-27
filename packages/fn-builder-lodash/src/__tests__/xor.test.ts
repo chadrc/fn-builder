@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import xor from "../xor";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const xor = fn.xor();
 
     const input = ['a', 'b', 'c', 'd'];

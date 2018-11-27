@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import repeat from "../repeat";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const repeat = fn.repeat();
 
     const input = ['a', 'b', 'c', 'd'];

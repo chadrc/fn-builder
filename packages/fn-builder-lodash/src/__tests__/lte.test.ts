@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import lte from "../lte";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const lte = fn.lte();
 
     const input = ['a', 'b', 'c', 'd'];

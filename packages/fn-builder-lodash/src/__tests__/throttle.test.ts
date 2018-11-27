@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import throttle from "../throttle";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const throttle = fn.throttle();
 
     const input = ['a', 'b', 'c', 'd'];

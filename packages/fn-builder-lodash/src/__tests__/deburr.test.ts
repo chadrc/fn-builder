@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import deburr from "../deburr";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const deburr = fn.deburr();
 
     const input = ['a', 'b', 'c', 'd'];

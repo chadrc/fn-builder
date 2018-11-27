@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import lowerFirst from "../lowerFirst";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const lowerFirst = fn.lowerFirst();
 
     const input = ['a', 'b', 'c', 'd'];

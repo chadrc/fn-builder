@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import ary from "../ary";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const ary = fn.ary();
 
     const input = ['a', 'b', 'c', 'd'];

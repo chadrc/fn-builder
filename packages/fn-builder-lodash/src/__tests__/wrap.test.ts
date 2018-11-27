@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import wrap from "../wrap";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const wrap = fn.wrap();
 
     const input = ['a', 'b', 'c', 'd'];

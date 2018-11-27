@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import isFinite from "../isFinite";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const isFinite = fn.isFinite();
 
     const input = ['a', 'b', 'c', 'd'];

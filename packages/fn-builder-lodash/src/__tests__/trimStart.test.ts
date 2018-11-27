@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import trimStart from "../trimStart";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const trimStart = fn.trimStart();
 
     const input = ['a', 'b', 'c', 'd'];

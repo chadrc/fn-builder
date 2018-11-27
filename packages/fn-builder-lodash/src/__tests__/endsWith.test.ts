@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import endsWith from "../endsWith";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const endsWith = fn.endsWith();
 
     const input = ['a', 'b', 'c', 'd'];

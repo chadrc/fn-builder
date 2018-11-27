@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import reverse from "../reverse";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const reverse = fn.reverse();
 
     const input = ['a', 'b', 'c', 'd'];

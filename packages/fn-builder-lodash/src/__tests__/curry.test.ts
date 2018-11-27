@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import curry from "../curry";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const curry = fn.curry();
 
     const input = ['a', 'b', 'c', 'd'];

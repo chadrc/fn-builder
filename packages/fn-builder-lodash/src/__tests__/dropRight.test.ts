@@ -4,17 +4,17 @@ import * as FnBuilder from "fn-builder";
 import dropRight from "../dropRight";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const dropRight = fn.dropRight();
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
+    const dropRight = fn.dropRight().fn;
     expect(dropRight([1, 2, 3])).to.deep.equal([1, 2]);
 
-    const dropRight2 = fn.dropRight(2);
+    const dropRight2 = fn.dropRight(2).fn;
     expect(dropRight2([1, 2, 3])).to.deep.equal([1]);
 
-    const dropRight3 = fn.dropRight(5);
+    const dropRight3 = fn.dropRight(5).fn;
     expect(dropRight3([1, 2, 3])).to.deep.equal([]);
 
-    const dropRight4 = fn.dropRight(0);
+    const dropRight4 = fn.dropRight(0).fn;
     expect(dropRight4([1, 2, 3])).to.deep.equal([1, 2, 3]);
 };
 

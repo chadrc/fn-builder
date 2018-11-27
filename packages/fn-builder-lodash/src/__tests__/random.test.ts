@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import random from "../random";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const random = fn.random();
 
     const input = ['a', 'b', 'c', 'd'];

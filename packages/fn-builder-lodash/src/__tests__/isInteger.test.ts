@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import isInteger from "../isInteger";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const isInteger = fn.isInteger();
 
     const input = ['a', 'b', 'c', 'd'];

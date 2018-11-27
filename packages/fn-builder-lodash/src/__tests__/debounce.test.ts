@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import debounce from "../debounce";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const debounce = fn.debounce();
 
     const input = ['a', 'b', 'c', 'd'];

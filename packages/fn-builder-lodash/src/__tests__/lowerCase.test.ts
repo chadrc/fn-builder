@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import lowerCase from "../lowerCase";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const lowerCase = fn.lowerCase();
 
     const input = ['a', 'b', 'c', 'd'];

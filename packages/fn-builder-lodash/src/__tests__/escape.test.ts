@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import escape from "../escape";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const escape = fn.escape();
 
     const input = ['a', 'b', 'c', 'd'];

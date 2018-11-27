@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import delay from "../delay";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const delay = fn.delay();
 
     const input = ['a', 'b', 'c', 'd'];

@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import takeRightWhile from "../takeRightWhile";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const takeRightWhile = fn.takeRightWhile();
 
     const input = ['a', 'b', 'c', 'd'];

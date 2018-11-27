@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import intersectionWith from "../intersectionWith";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const intersectionWith = fn.intersectionWith();
 
     const input = ['a', 'b', 'c', 'd'];

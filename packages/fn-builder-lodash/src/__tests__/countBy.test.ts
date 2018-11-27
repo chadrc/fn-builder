@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import countBy from "../countBy";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const countBy = fn.countBy();
 
     const input = ['a', 'b', 'c', 'd'];

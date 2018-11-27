@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import unzipWith from "../unzipWith";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const unzipWith = fn.unzipWith();
 
     const input = ['a', 'b', 'c', 'd'];

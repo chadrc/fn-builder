@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import bindAll from "../bindAll";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const bindAll = fn.bindAll();
 
     const input = ['a', 'b', 'c', 'd'];

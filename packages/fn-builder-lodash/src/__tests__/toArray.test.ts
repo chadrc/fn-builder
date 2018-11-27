@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import toArray from "../toArray";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const toArray = fn.toArray();
 
     const input = ['a', 'b', 'c', 'd'];

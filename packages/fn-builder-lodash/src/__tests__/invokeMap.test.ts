@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import invokeMap from "../invokeMap";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const invokeMap = fn.invokeMap();
 
     const input = ['a', 'b', 'c', 'd'];

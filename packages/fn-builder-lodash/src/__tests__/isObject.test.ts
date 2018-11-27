@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import isObject from "../isObject";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const isObject = fn.isObject();
 
     const input = ['a', 'b', 'c', 'd'];

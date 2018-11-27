@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import multiply from "../multiply";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const multiply = fn.multiply();
 
     const input = ['a', 'b', 'c', 'd'];

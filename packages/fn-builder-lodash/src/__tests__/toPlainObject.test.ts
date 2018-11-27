@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import toPlainObject from "../toPlainObject";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const toPlainObject = fn.toPlainObject();
 
     const input = ['a', 'b', 'c', 'd'];

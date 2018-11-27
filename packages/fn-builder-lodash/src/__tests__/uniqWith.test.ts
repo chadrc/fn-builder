@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import uniqWith from "../uniqWith";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const uniqWith = fn.uniqWith();
 
     const input = ['a', 'b', 'c', 'd'];

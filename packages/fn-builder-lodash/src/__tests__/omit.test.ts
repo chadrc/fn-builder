@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import omit from "../omit";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const omit = fn.omit();
 
     const input = ['a', 'b', 'c', 'd'];

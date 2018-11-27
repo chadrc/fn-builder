@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import join from "../join";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const join = fn.join();
 
     const input = ['a', 'b', 'c', 'd'];

@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import sortedLastIndex from "../sortedLastIndex";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const sortedLastIndex = fn.sortedLastIndex();
 
     const input = ['a', 'b', 'c', 'd'];

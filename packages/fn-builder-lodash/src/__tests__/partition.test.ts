@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import partition from "../partition";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const partition = fn.partition();
 
     const input = ['a', 'b', 'c', 'd'];

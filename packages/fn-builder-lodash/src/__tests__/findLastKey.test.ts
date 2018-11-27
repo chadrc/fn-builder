@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import findLastKey from "../findLastKey";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const findLastKey = fn.findLastKey();
 
     const input = ['a', 'b', 'c', 'd'];

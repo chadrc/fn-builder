@@ -4,8 +4,8 @@ import * as FnBuilder from "fn-builder";
 import difference from "../difference";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const difference = fn.difference([2, 3], [4]);
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
+    const difference = fn.difference([2, 3], [4]).fn;
 
     const output = difference([2, 1, 4]);
 

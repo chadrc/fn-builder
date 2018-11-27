@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import split from "../split";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const split = fn.split();
 
     const input = ['a', 'b', 'c', 'd'];

@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import sortBy from "../sortBy";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const sortBy = fn.sortBy();
 
     const input = ['a', 'b', 'c', 'd'];

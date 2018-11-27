@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import rearg from "../rearg";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const rearg = fn.rearg();
 
     const input = ['a', 'b', 'c', 'd'];

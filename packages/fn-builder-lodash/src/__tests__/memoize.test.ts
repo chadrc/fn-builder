@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import memoize from "../memoize";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const memoize = fn.memoize();
 
     const input = ['a', 'b', 'c', 'd'];

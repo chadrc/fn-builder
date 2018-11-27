@@ -4,8 +4,8 @@ import * as FnBuilder from "fn-builder";
 import chunk from "../chunk";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const chunk = fn.chunk(2);
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
+    const chunk = fn.chunk(2).fn;
 
     const input = ['a', 'b', 'c', 'd'];
     const output = chunk(input);

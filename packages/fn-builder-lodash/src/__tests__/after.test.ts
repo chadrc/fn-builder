@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import after from "../after";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const after = fn.after();
 
     const input = ['a', 'b', 'c', 'd'];

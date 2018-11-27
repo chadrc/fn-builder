@@ -4,8 +4,8 @@ import * as FnBuilder from "fn-builder";
 import compact from "../compact";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const compact = fn.compact;
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
+    const compact = fn.compact.fn;
 
     const input = [0, 1, false, 2, '', 3];
     const output = compact(input);

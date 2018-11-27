@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import defaultTo from "../defaultTo";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const defaultTo = fn.defaultTo();
 
     const input = ['a', 'b', 'c', 'd'];

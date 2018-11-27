@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import filter from "../filter";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const filter = fn.filter();
 
     const input = ['a', 'b', 'c', 'd'];

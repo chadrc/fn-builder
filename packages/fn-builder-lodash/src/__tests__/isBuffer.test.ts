@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import isBuffer from "../isBuffer";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const isBuffer = fn.isBuffer();
 
     const input = ['a', 'b', 'c', 'd'];

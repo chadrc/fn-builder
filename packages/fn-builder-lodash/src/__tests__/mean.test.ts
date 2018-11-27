@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import mean from "../mean";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const mean = fn.mean();
 
     const input = ['a', 'b', 'c', 'd'];

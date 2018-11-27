@@ -5,8 +5,8 @@ import differenceWith from "../differenceWith";
 import LodashFn from "../LodashFn";
 import * as _ from "lodash";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const differenceWith = fn.differenceWith([{ 'x': 1, 'y': 2 }], _.isEqual);
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
+    const differenceWith = fn.differenceWith([{ 'x': 1, 'y': 2 }], _.isEqual).fn;
 
     const output = differenceWith([{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }]);
 

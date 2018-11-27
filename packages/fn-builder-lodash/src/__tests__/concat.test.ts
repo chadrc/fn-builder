@@ -4,8 +4,8 @@ import * as FnBuilder from "fn-builder";
 import concat from "../concat";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const concat = fn.concat(2, [3], [[4]]);
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
+    const concat = fn.concat(2, [3], [[4]]).fn;
 
     const input = [1];
     const output = concat(input);

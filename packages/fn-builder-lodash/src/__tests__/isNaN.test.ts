@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import isNaN from "../isNaN";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const isNaN = fn.isNaN();
 
     const input = ['a', 'b', 'c', 'd'];

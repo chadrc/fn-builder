@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import capitalize from "../capitalize";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const capitalize = fn.capitalize();
 
     const input = ['a', 'b', 'c', 'd'];

@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import partialRight from "../partialRight";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const partialRight = fn.partialRight();
 
     const input = ['a', 'b', 'c', 'd'];

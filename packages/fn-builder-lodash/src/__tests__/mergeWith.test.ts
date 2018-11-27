@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import mergeWith from "../mergeWith";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const mergeWith = fn.mergeWith();
 
     const input = ['a', 'b', 'c', 'd'];

@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import cloneDeepWith from "../cloneDeepWith";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const cloneDeepWith = fn.cloneDeepWith();
 
     const input = ['a', 'b', 'c', 'd'];

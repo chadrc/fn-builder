@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import reduceRight from "../reduceRight";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const reduceRight = fn.reduceRight();
 
     const input = ['a', 'b', 'c', 'd'];

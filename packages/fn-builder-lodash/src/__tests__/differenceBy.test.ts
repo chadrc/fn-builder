@@ -4,14 +4,14 @@ import * as FnBuilder from "fn-builder";
 import differenceBy from "../differenceBy";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
-    const differenceBy = fn.differenceBy([2.3, 3.4], Math.floor);
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
+    const differenceBy = fn.differenceBy([2.3, 3.4], Math.floor).fn;
 
     const output = differenceBy([2.1, 1.2]);
 
     expect(output).to.deep.equal([1.2]);
 
-    const differenceByProperty = fn.differenceBy([{ 'x': 1 }], 'x');
+    const differenceByProperty = fn.differenceBy([{ 'x': 1 }], 'x').fn;
 
     const propOutput = differenceByProperty([{ 'x': 2 }, { 'x': 1 }]);
 

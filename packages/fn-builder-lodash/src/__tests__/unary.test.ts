@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import unary from "../unary";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const unary = fn.unary();
 
     const input = ['a', 'b', 'c', 'd'];

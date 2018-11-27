@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import flip from "../flip";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const flip = fn.flip();
 
     const input = ['a', 'b', 'c', 'd'];

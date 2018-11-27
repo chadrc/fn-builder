@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import isSet from "../isSet";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const isSet = fn.isSet();
 
     const input = ['a', 'b', 'c', 'd'];

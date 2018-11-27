@@ -4,7 +4,7 @@ import * as FnBuilder from "fn-builder";
 import mapKeys from "../mapKeys";
 import LodashFn from "../LodashFn";
 
-const testWithFn = (fn: FnBuilder.Fn<any>) => () => {
+const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
     const mapKeys = fn.mapKeys();
 
     const input = ['a', 'b', 'c', 'd'];
