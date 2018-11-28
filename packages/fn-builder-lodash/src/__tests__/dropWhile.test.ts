@@ -3,8 +3,13 @@ import 'jest';
 import * as FnBuilder from "fn-builder";
 import dropWhile from "../dropWhile";
 import LodashFn from "../LodashFn";
+import {FunctionType} from "../functions/dropWhile";
 
-const testWithFn = (fn: FnBuilder.FnBuilder<any>) => () => {
+interface TestFn {
+    dropWhile: FunctionType
+}
+
+const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
     const input = [
         { 'user': 'barney',  'active': false },
         { 'user': 'fred',    'active': false },
