@@ -1,12 +1,12 @@
 {
-  "name": "fn-builder-lodash",
+  "name": "fn-builder-standard",
   "version": "0.0.1",
-  "description": "Converts Lodash library to be used by fn-builder.",
+  "description": "Library to use JavaScript object methods with fn-builder.",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "clean": "echo `rm -r functions &>/dev/null`"
+    "clean": "echo `rm -r array/ math/ string/ &>/dev/null`"
   },
   "keywords": [
     "lodash",
@@ -40,7 +40,6 @@
     "testRegex": "src/__tests__/.*\\.test\\.(ts|tsx|js)$"
   },
   "dependencies": {
-    "fn-builder": "0.0.7",
-    "lodash": "^4.17.11"
+    "fn-builder": "0.0.7"
   }
 }
