@@ -6,7 +6,7 @@
  * @param args
  */
 export default <T>(args: T[]): T[] => {
-    let actual = args;
+    let actual: T[] = args;
     if (actual && actual.length > 0
         && Array.isArray(actual[0])) {
         actual = actual[0] as unknown as T[];
@@ -14,12 +14,12 @@ export default <T>(args: T[]): T[] => {
     return actual;
 }
 
-interface VariableArgs {
-    (...codes: number[]): string
+interface VariableArgs<T, R> {
+    (...codes: T[]): R
 }
 
-interface ArrayArg {
-    (codes: number[]): string
+interface ArrayArg<T, R> {
+    (codes: T[]): R
 }
 
-export type VariableOrArrayArgFunction = ArrayArg | VariableArgs;
+export type VariableOrArrayArgFunction<T, R> = ArrayArg<T, R> | VariableArgs<T, R>;
