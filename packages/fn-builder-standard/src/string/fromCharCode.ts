@@ -3,4 +3,4 @@ import {addDynamic} from "fn-builder";
 
 addDynamic("fromCharCode", fromCharCode);
 
-export default fromCharCode
+export default fromCharCode;
