@@ -13,3 +13,13 @@ export default <T>(args: T[]): T[] => {
     }
     return actual;
 }
+
+interface VariableArgs {
+    (...codes: number[]): string
+}
+
+interface ArrayArg {
+    (codes: number[]): string
+}
+
+export type VariableOrArrayArg = ArrayArg | VariableArgs;

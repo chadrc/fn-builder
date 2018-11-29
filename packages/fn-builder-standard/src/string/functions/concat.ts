@@ -1,9 +1,5 @@
-import varArgsOrArray from "../../shared/varArgsToArray";
+import varArgsOrArray, {VariableOrArrayArg} from "../../shared/varArgsToArray";
 
-export interface FunctionType {
-    (...strs: string[]): (str: string) => string
-}
+export type FunctionType = VariableOrArrayArg
 
-export default (...strs: string[]) => (str: string) => {
-    return str.concat(...varArgsOrArray(strs));
-}
+export default (...strs: string[]) => (str: string) => str.concat(...varArgsOrArray(strs));
