@@ -22,4 +22,4 @@ interface ArrayArg {
     (codes: number[]): string
 }
 
-export type VariableOrArrayArg = ArrayArg | VariableArgs;
+export type VariableOrArrayArgFunction = ArrayArg | VariableArgs;
