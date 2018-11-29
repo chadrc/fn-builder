@@ -15,7 +15,7 @@ const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
     expect(func1([9731, 9733, 9842, 0x2F804])).to.equal(expected);
 };
 
-describe("dropWhile", () => {
+describe("fromCodePoint", () => {
     it("can be included in custom Fn object", testWithFn(
         FnBuilder.from({
             fromCodePoint: fromCodePoint

@@ -14,7 +14,7 @@ const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
     expect(func1([189, 43, 190, 61])).to.equal("½+¾=");
 };
 
-describe("dropWhile", () => {
+describe("fromCharCode", () => {
     it("can be included in custom Fn object", testWithFn(
         FnBuilder.from({
             fromCharCode: fromCharCode

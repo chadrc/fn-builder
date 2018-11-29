@@ -13,7 +13,7 @@ const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
     expect(func1("The quick brown fox jumped over the lazy dog.")).to.equal(98);
 };
 
-describe("dropWhile", () => {
+describe("charCodeAt", () => {
     it("can be included in custom Fn object", testWithFn(
         FnBuilder.from({
             charCodeAt: charCodeAt

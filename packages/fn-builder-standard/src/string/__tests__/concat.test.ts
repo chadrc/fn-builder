@@ -1,22 +1,22 @@
 import {expect} from 'chai';
 import 'jest';
 import * as FnBuilder from "fn-builder";
-import charAt from "../charAt";
-import {FunctionType} from "../functions/charAt";
+import concat from "../concat";
+import {FunctionType} from "../functions/concat";
 
 interface TestFn {
-    charAt: FunctionType
+    concat: FunctionType
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.charAt(10).fn;
-    expect(func1("The quick brown fox jumped over the lazy dog.")).to.equal("b");
+    const func1 = fn.concat("Function ", "World").fn;
+    expect(func1("Hello ")).to.equal("Hello Function World");
 };
 
-describe("charAt", () => {
+describe("concat", () => {
     it("can be included in custom Fn object", testWithFn(
         FnBuilder.from({
-            charAt: charAt
+            concat: concat
         })
     ));
 
