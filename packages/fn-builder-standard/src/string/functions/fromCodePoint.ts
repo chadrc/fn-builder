@@ -1,5 +1,5 @@
-import varArgsToArray, {VariableOrArrayArg} from "../../shared/varArgsToArray";
+import varArgsToArray, {VariableOrArrayArgFunction} from "../../shared/varArgsToArray";
 
-export type FunctionType = VariableOrArrayArg;
+export type FunctionType = VariableOrArrayArgFunction;
 
 export default (...codes: number[]) => String.fromCodePoint(...varArgsToArray(codes));
