@@ -13,7 +13,7 @@ const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
 
     expect(func1("Hello, World")).to.equal("Hello, Universe");
 
-    const func2 = fn.replace(/o/g, () => "O").fn;
+    const func2 = fn.replace(/o/g, (match) => match.toUpperCase()).fn;
 
     expect(func2("Hello, World")).to.equal("HellO, WOrld");
 };
