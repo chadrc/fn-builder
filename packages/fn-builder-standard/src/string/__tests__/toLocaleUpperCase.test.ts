@@ -11,7 +11,7 @@ interface TestFn {
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
     const func1 = fn.toLocaleUpperCase("en-US").fn;
 
-    expect(func1('İstanbul')).to.equal("ISTANBUL");
+    expect(func1('İstanbul')).to.equal("İSTANBUL");
 
     const func2 = fn.toLocaleUpperCase("tr").fn;
 
