@@ -196,6 +196,21 @@ export class FnContext<T> {
             finalFunction = (...input: any[]) => next(prev(...input));
         }
 
+        // set name and cacheKey of function
+        let cacheKey = context._name;
+        if (root._options.caching === true) {
+            cacheKey = context._cacheKey;
+        }
+
+        Object.defineProperty(finalFunction, "name", {
+            value: context._name
+        });
+
+        // Always set a cache key so it may be used in context names
+        Object.defineProperty(finalFunction, "fnCacheString", {
+            value: cacheKey
+        });
+
         // cache function
         context._builtFunction = finalFunction;
         return finalFunction;
