@@ -50,7 +50,7 @@ export type GenericFunction = (...arg: any) => any
  * const func4fn = func4.fn; StringFunc
  */
 
-type FnPropertyFunction<T, R, F extends (...arg: any[]) => any, FR extends (...arg: any[]) => any > =
+type FnPropertyFunction<T, R, F extends (...arg: any[]) => any, FR extends (...arg: any[]) => any> =
     (...args: Parameters<F>) => PropertyOrFunction<T, R, FR>;
 
 type PropertyOrFunction<T, R, F> = F extends (...arg: infer U) => any ?
@@ -67,11 +67,33 @@ type FnProperty<T, R> = {
     fn: LastFunctionReturnType<R>
 }
 
-type LastFunctionReturnType<FunctionType> = FunctionType extends (...arg: infer U) => any ?
+//
+/**
+ * support for five nested functions
+ * func1 = (arg1) => any
+ * func2 = (arg1) => (arg2) => any
+ * func3 = (arg1) => (arg2) => (arg3) => any
+ * func4 = (arg1) => (arg2) => (arg3) => (arg4) => any
+ * func5 = (arg1) => (arg2) => (arg3) => (arg4) => (arg5) => any
+ * TODO: See if we can make this recursive
+ */
+type LastFunctionReturnType<FunctionType> = FunctionType extends (...arg: any[]) => any ?
     ReturnType<FunctionType> extends (...arg: any[]) => any ?
-        ReturnType<FunctionType>
+        ReturnType<ReturnType<FunctionType>> extends (...arg: any[]) => any ?
+            ReturnType<ReturnType<ReturnType<FunctionType>>> extends (...arg: any[]) => any ?
+                ReturnType<ReturnType<ReturnType<ReturnType<FunctionType>>>> extends (...arg: any[]) => any ?
+                    ReturnType<ReturnType<ReturnType<ReturnType<ReturnType<FunctionType>>>>> extends (...arg: any[]) => any ?
+                        (...args: any[]) => any // generic function for anything after
+                        :
+                        ReturnType<ReturnType<ReturnType<ReturnType<FunctionType>>>> // func5 returns here (arg5) => any
+                    :
+                    ReturnType<ReturnType<ReturnType<FunctionType>>> // func4 returns here (arg4) => any
+                :
+                ReturnType<ReturnType<FunctionType>> // func3 returns here (arg3) => any
+            :
+            ReturnType<FunctionType>  // func2 returns here (arg2) => any
         :
-        FunctionType
+        FunctionType // func1 returns here (arg1) => any
     :
     never; // Not a function type, should never happen
 
@@ -133,7 +155,7 @@ export class FnContext<T> {
 
             // If we are not at the keyed root
             // we need to call the keyed root function with args in subsequent contexts
-            if (keyedRoot !== currentContext)  {
+            if (keyedRoot !== currentContext) {
 
                 // go up chain until keyed root
                 // collect all arg contexts for current function
@@ -186,7 +208,8 @@ export class FnContext<T> {
         options: FnContextOptions,
     ) => {
         // make a root context
-        const func = (() => {}) as unknown as FnContextWrapper<T>;
+        const func = (() => {
+        }) as unknown as FnContextWrapper<T>;
         func.context = new FnContext<T>(obj, options);
 
         // Root context doesn't get cached
@@ -218,7 +241,8 @@ export class FnContext<T> {
         // cache key wasn't in the cache
 
         // create a new fn object
-        const func = (() => {}) as unknown as FnContextWrapper<T>;
+        const func = (() => {
+        }) as unknown as FnContextWrapper<T>;
         func.context = new FnContext<T>(
             cacheKey.name,
             parentContext,
