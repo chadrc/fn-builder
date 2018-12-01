@@ -1,22 +1,22 @@
 import {expect} from 'chai';
 import 'jest';
 import * as FnBuilder from "fn-builder";
-import getPrototype from "../getPrototype";
-import {FunctionType} from "../functions/getPrototype";
+import getPrototypeOf from "../getPrototypeOfOf";
+import {FunctionType} from "../functions/getPrototypeOf";
 
 interface TestFn {
-    getPrototype: FunctionType
+    getPrototypeOf: FunctionType
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.getPrototype(/or/).fn;
+    const func1 = fn.getPrototypeOf(/or/).fn;
     expect(func1("Hello World")).to.deep.equal(["or"]);
 };
 
-describe("getPrototype", () => {
+describe("getPrototypeOf", () => {
     it("can be included in custom Fn object", testWithFn(
         FnBuilder.from({
-            getPrototype: getPrototype
+            getPrototypeOf: getPrototypeOf
         })
     ));
 
