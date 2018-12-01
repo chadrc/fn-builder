@@ -1,5 +1,10 @@
-import varArgsOrArray, {VariableOrArrayArgFunction} from "../../shared/varArgsToArray";
+import varArgsOrArray from "../../shared/varArgsToArray";
 
-export type FunctionType = VariableOrArrayArgFunction<string, string[]>
+interface ArrayArg<T, R> {
+    (codes: T[]): R
+}
 
-export default (...strs: string[]) => (str: string) => str.concat(...varArgsOrArray(strs));
+export type FunctionType = ArrayArg<string, (str: string) => string>
+
+export default ((...strs: string[]) => (str: string) => str.concat(...varArgsOrArray(strs))
+) as unknown as FunctionType;

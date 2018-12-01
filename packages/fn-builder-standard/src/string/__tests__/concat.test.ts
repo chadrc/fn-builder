@@ -9,7 +9,7 @@ interface TestFn {
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.concat("Function ", "World").fn;
+    const func1 = fn.concat(["Function ", "World"]).fn;
     expect(func1("Hello ")).to.equal("Hello Function World");
 };
 
