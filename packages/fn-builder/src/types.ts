@@ -50,15 +50,12 @@ export type GenericFunction = (...arg: any) => any
  * const func4fn = func4.fn; StringFunc
  */
 
-type FnPropertyFunction<T, R, F > = F extends (...arg: infer U) => any ?
-    ReturnType<F> extends (...arg: any[]) => any ?
-        (...args: U) => PropertyOrFunction<T, R, ReturnType<F>>
-        : never // Already know that F is a function that returns a function, but need the checks to infer args
-    : never;
+type FnPropertyFunction<T, R, F extends (...arg: any[]) => any, FR extends (...arg: any[]) => any > =
+    (...args: Parameters<F>) => PropertyOrFunction<T, R, ReturnType<F>>;
 
 type PropertyOrFunction<T, R, F> = F extends (...arg: infer U) => any ?
     ReturnType<F> extends (...arg: any[]) => any ?
-        FnPropertyFunction<T, R, F>
+        FnPropertyFunction<T, R, F, ReturnType<F>>
         :
         FnProperty<T, R>
     :
