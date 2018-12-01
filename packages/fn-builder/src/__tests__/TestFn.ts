@@ -9,7 +9,7 @@ export class TestFn {
     avg = (values: number[]) => this.sum(values) / values.length;
     inc = (value: number) => ++value;
 
-    map = (mapper: (num: any) => any) => (value: number) => mapper(value);
+    map = (mapper: (num: any) => any) => (value: number): any[] => mapper(value);
 
     context = (obj: {[key: string]: any}) => (prop: string) => obj[prop];
 

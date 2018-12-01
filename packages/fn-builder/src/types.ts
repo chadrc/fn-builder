@@ -21,8 +21,6 @@ export interface FnContextOptions {
     caching?: boolean
 }
 
-export type GenericFunction = (...arg: any) => any
-
 /**
  * type StringFunc = (arg) => string
  *
@@ -61,12 +59,6 @@ type PropertyOrFunction<T, R, F> = F extends (...arg: infer U) => any ?
     :
     FnProperty<T, R>;
 
-type FnProperty<T, R> = {
-    [P in keyof T]: PropertyOrFunction<T, R, T[P]>
-} & {
-    fn: LastFunctionReturnType<R>
-}
-
 //
 /**
  * support for five nested functions
@@ -96,6 +88,12 @@ type LastFunctionReturnType<FunctionType> = FunctionType extends (...arg: any[])
         FunctionType // func1 returns here (arg1) => any
     :
     never; // Not a function type, should never happen
+
+export type FnProperty<T, R> = {
+    [P in keyof T]: PropertyOrFunction<T, R, T[P]>
+} & {
+    fn: LastFunctionReturnType<R>
+}
 
 export type FnBuilder<T> = {
     [P in keyof T]: PropertyOrFunction<T, T[P], T[P]>;

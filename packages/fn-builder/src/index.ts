@@ -1,5 +1,5 @@
 import makeFnProxy, {InternalsKey} from "./makeFnProxyHandler";
-import {FnBuilder, FnContext, FnContextOptions} from "./types";
+import {FnBuilder, FnContext, FnContextOptions, FnProperty} from "./types";
 import {DynamicFn} from "./DynamicFn";
 
 const defaultContextOptions: FnContextOptions = {
@@ -31,7 +31,7 @@ export const from = <T extends object = DynamicFn>(
     return makeFnProxy(contextObject as T, finalOptions);
 };
 
-export const nameOf = (fn: FnBuilder<any>) => {
+export const nameOf = (fn: FnBuilder<any> | FnProperty<any, any>) => {
     const context = (fn as any)[InternalsKey] as FnContext<any>;
     return context.name;
 };

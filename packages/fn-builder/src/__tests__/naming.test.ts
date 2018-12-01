@@ -73,7 +73,7 @@ describe(`Naming of functions`, () => {
     it(`Name of function with another composed function contains its name`, () => {
         const fnBuilder = FnBuilder.from(new TestFn());
 
-        const add5_mul3 = fnBuilder.add(5).mul(3);
+        const add5_mul3 = fnBuilder.add(5).mul(3).fn;
 
         const valuesInRange_map = fnBuilder.valuesInRange(10, 20).map(add5_mul3);
 
