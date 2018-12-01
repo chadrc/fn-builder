@@ -51,7 +51,7 @@ export type GenericFunction = (...arg: any) => any
  */
 
 type FnPropertyFunction<T, R, F extends (...arg: any[]) => any, FR extends (...arg: any[]) => any > =
-    (...args: Parameters<F>) => PropertyOrFunction<T, R, ReturnType<F>>;
+    (...args: Parameters<F>) => PropertyOrFunction<T, R, FR>;
 
 type PropertyOrFunction<T, R, F> = F extends (...arg: infer U) => any ?
     ReturnType<F> extends (...arg: any[]) => any ?
