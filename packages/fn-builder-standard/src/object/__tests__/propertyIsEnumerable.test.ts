@@ -5,18 +5,22 @@ import propertyIsEnumerable from "../propertyIsEnumerable";
 import {FunctionType} from "../functions/propertyIsEnumerable";
 
 interface TestFn {
-    propertyIsEnumerable: FunctionType
+    objPropertyIsEnumerable: FunctionType
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.propertyIsEnumerable(/or/).fn;
-    expect(func1("Hello World")).to.deep.equal(["or"]);
+    const obj = {
+        value: "Value"
+    };
+
+    const func1 = fn.objPropertyIsEnumerable("value").fn;
+    expect(func1(obj)).to.equal(obj.propertyIsEnumerable("value"));
 };
 
 describe("propertyIsEnumerable", () => {
     it("can be included in custom Fn object", testWithFn(
         FnBuilder.from({
-            propertyIsEnumerable: propertyIsEnumerable
+            objPropertyIsEnumerable: propertyIsEnumerable
         })
     ));
 

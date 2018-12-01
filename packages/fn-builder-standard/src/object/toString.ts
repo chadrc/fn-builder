@@ -1,11 +1,11 @@
 import {addDynamic} from "fn-builder";
 import toString, {FunctionType} from "./functions/toString";
 
-addDynamic("toString", toString);
+addDynamic("objToString", toString);
 
 declare module "fn-builder/DynamicFn" {
     interface DynamicFn {
-        toString: FunctionType
+        objToString: FunctionType
     }
 }
 

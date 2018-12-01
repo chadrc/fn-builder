@@ -9,8 +9,19 @@ interface TestFn {
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.defineProperties(/or/).fn;
-    expect(func1("Hello World")).to.deep.equal(["or"]);
+    const properties = {
+        addNumbers: {
+            value: (num1: number, num2: number) => num1 + num2
+        },
+        subNumbers: {
+            value: (num1: number, num2: number) => num1 - num2
+        }
+    };
+
+    const expected = Object.defineProperties({}, properties);
+
+    const func1 = fn.defineProperties(properties).fn;
+    expect(func1({})).to.deep.equal(expected);
 };
 
 describe("defineProperties", () => {

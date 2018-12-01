@@ -5,18 +5,21 @@ import valueOf from "../valueOf";
 import {FunctionType} from "../functions/valueOf";
 
 interface TestFn {
-    valueOf: FunctionType
+    objValueOf: FunctionType
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.valueOf(/or/).fn;
-    expect(func1("Hello World")).to.deep.equal(["or"]);
+    const obj = "string";
+
+    const func1 = fn.objValueOf.fn;
+
+    expect(func1(obj)).to.deep.equal(obj.valueOf());
 };
 
 describe("valueOf", () => {
     it("can be included in custom Fn object", testWithFn(
         FnBuilder.from({
-            valueOf: valueOf
+            objValueOf: valueOf
         })
     ));
 

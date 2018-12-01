@@ -1,23 +1,34 @@
-
 import {expect} from 'chai';
 import 'jest';
 import * as FnBuilder from "fn-builder";
-import hasOwnPropety from "../hasOwnPropety";
-import {FunctionType} from "../functions/hasOwnPropety";
+import hasOwnProperty from "../hasOwnProperty";
+import {FunctionType} from "../functions/hasOwnProperty";
 
 interface TestFn {
-    hasOwnPropety: FunctionType
+    objHasOwnProperty: FunctionType
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.hasOwnPropety(/or/).fn;
-    expect(func1("Hello World")).to.deep.equal(["or"]);
+    const properties = {
+        addNumbers: {
+            value: (num1: number, num2: number) => num1 + num2
+        },
+        subNumbers: {
+            value: (num1: number, num2: number) => num1 - num2
+        }
+    };
+
+    const obj = Object.defineProperties({}, properties);
+
+    const func1 = fn.objHasOwnProperty("addNumbers").fn;
+
+    expect(func1(obj)).to.equal(true);
 };
 
 describe("hasOwnPropety", () => {
     it("can be included in custom Fn object", testWithFn(
         FnBuilder.from({
-            hasOwnPropety: hasOwnPropety
+            objHasOwnProperty: hasOwnProperty
         })
     ));
 

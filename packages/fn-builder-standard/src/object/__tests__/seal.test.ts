@@ -9,8 +9,10 @@ interface TestFn {
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.seal(/or/).fn;
-    expect(func1("Hello World")).to.deep.equal(["or"]);
+    const obj = {};
+    const func1 = fn.seal.fn;
+    const result = func1(obj);
+    expect(Object.isSealed(result)).to.deep.equal(true);
 };
 
 describe("seal", () => {

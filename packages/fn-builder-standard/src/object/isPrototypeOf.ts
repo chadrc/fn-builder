@@ -1,11 +1,11 @@
 import {addDynamic} from "fn-builder";
 import isPrototypeOf, {FunctionType} from "./functions/isPrototypeOf";
 
-addDynamic("isPrototypeOf", isPrototypeOf);
+addDynamic("objIsPrototypeOf", isPrototypeOf);
 
 declare module "fn-builder/DynamicFn" {
     interface DynamicFn {
-        isPrototypeOf: FunctionType
+        objIsPrototypeOf: FunctionType
     }
 }
 

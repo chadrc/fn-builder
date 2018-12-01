@@ -9,8 +9,22 @@ interface TestFn {
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.setPrototypeOf(/or/).fn;
-    expect(func1("Hello World")).to.deep.equal(["or"]);
+    const proto = {
+        addNumbers: {
+            value: (num1: number, num2: number) => num1 + num2
+        },
+        subNumbers: {
+            value: (num1: number, num2: number) => num1 - num2
+        }
+    };
+
+    const obj = {};
+
+    const func1 = fn.setPrototypeOf(proto).fn;
+
+    const result = func1(obj);
+
+    expect(Object.getPrototypeOf(result)).to.deep.equal(proto);
 };
 
 describe("setPrototypeOf", () => {

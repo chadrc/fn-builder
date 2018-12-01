@@ -9,8 +9,10 @@ interface TestFn {
 }
 
 const testWithFn = (fn: FnBuilder.FnBuilder<TestFn>) => () => {
-    const func1 = fn.preventExtensions(/or/).fn;
-    expect(func1("Hello World")).to.deep.equal(["or"]);
+    const obj = {};
+    const func1 = fn.preventExtensions.fn;
+    const result = func1(obj);
+    expect(Object.isExtensible(result)).to.deep.equal(false);
 };
 
 describe("preventExtensions", () => {
