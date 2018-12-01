@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import 'jest';
 import * as FnBuilder from "fn-builder";
-import getPrototypeOf from "../getPrototypeOfOf";
+import getPrototypeOf from "../getPrototypeOf";
 import {FunctionType} from "../functions/getPrototypeOf";
 
 interface TestFn {
