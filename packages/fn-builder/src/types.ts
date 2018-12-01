@@ -23,16 +23,63 @@ export interface FnContextOptions {
 
 export type GenericFunction = (...arg: any) => any
 
-export type FnPropertyFunction<T, F> = F extends (...arg: infer U) => any ?
+/**
+ * type StringFunc = (arg) => string
+ *
+ * type NumFunc = (arg) => number
+ * type MathFunc = (arg) => NumFunc
+ *
+ * class MyFn {
+ *     func1: StringFunc
+ *     func2: MathFunc
+ * }
+ * const fn = FnBuilder.from(new MyFn()); type = FnBuilder<MyFn>
+ *
+ * const func1 = fn.func1; type = FnProperty<MyFn, StringFunc>
+ *
+ * const func1fn = func1.fn; type = StringFunc
+ *
+ * const func2 = fn.func2; type = FnPropertyFunction<MyFn, NumFunc, MathFunc>
+ *
+ * const func3 = fn.func2(value); type = FnProperty<MyFn, NumFunc>
+ *
+ * const func3fn = func3.fn; type = NumFunc
+ *
+ * const func4 = fn.func1.func2(value); FnProperty<MyFn, StringFunc>
+ *
+ * const func4fn = func4.fn; StringFunc
+ */
+
+type FnPropertyFunction<T, R, F > = F extends (...arg: infer U) => any ?
     ReturnType<F> extends (...arg: any[]) => any ?
-        (...args: U) => FnBuilder<T> & FnPropertyFunction<T, ReturnType<F>>// & GenericFunction<T>
-        : (...args: any[]) => GenericFunction
-    : F;
+        (...args: U) => PropertyOrFunction<T, R, ReturnType<F>>
+        : never // Already know that F is a function that returns a function, but need the checks to infer args
+    : never;
+
+type PropertyOrFunction<T, R, F> = F extends (...arg: infer U) => any ?
+    ReturnType<F> extends (...arg: any[]) => any ?
+        FnPropertyFunction<T, R, F>
+        :
+        FnProperty<T, R>
+    :
+    FnProperty<T, R>;
+
+type FnProperty<T, R> = {
+    [P in keyof T]: PropertyOrFunction<T, R, T[P]>
+} & {
+    fn: LastFunctionReturnType<R>
+}
+
+type LastFunctionReturnType<FunctionType> = FunctionType extends (...arg: infer U) => any ?
+    ReturnType<FunctionType> extends (...arg: any[]) => any ?
+        ReturnType<FunctionType>
+        :
+        FunctionType
+    :
+    never; // Not a function type, should never happen
 
 export type FnBuilder<T> = {
-    [P in keyof T]: FnBuilder<T> & FnPropertyFunction<T, T[P]>;
-} & {
-    fn: (...args: any) => any
+    [P in keyof T]: PropertyOrFunction<T, T[P], T[P]>;
 }
 
 export interface FnContextWrapper<T> {
