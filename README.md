@@ -28,6 +28,7 @@ const input = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
 const fiveThroughTen = fnBuilder.valuesInRange(5, 10).fn; 
 console.log(fiveThroughTen(input)); // [6, 8, 10]
 
+// chain multiple together
 const sumOfFiveThroughTen = fnBuilder.valuesInRange(5, 10).sum.fn;
 console.log(sumOfFiveThroughTen(input)); // 24
 ```
